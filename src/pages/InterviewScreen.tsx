@@ -37,14 +37,14 @@ export default function InterviewPage() {
                         {isCameraOn ? <VideoScreen /> : <div className="text-2xl text-gray-400">Camera is off</div>}
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full flex gap-5">
                             <Button
-                                variant={isCameraOn ? "default" : "destructive"}
+                                variant={isCameraOn ? "ghost" : "destructive"}
                                 size="icon"
                                 onClick={() => setIsCameraOn(!isCameraOn)}
                             >
                                 {isCameraOn ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
                             </Button>
                             <Button
-                                variant={isMicOn ? "default" : "destructive"}
+                                variant={isMicOn ? "ghost" : "destructive"}
                                 size="icon"
                                 onClick={() => getMic()}
                             >
