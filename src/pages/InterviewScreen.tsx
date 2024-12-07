@@ -6,71 +6,239 @@ import { Link, useParams } from 'react-router-dom'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-const messages = [
+
+interface Captions { id: number, sender: string, text: string, timestamp: Date }
+const messages: Captions[] = [
     {
         id: 1,
         sender: "Alex",
-        text: "Hey Aaron,thanks for joining me today. I'm Alex and I'll be conducting your interview. I'm excited to get started... Can you tell me a little bit about yourself?",
+        text: "Hello Abhay, How was your day? Let's start with your backend interview",
         timestamp: new Date()
     },
-    {
-        id: 2,
-        sender: "Aaron",
-        text: "Hey Alex, its nice to meet you! My name is Aaron,I studied computer science at Brown University.I'm really passionate about software engineering and particularly interested in data science related...",
-        timestamp: new Date()
-    },
-    {
-        id: 3,
-        sender: "Alex",
-        text: "That's great to hear, Aaron",
-        timestamp: new Date()
-    }
 ]
 
 export default function InterviewPage() {
     const { type } = useParams()
     console.log(type)
 
-    const [isJoined, setIsJoined] = useState<boolean>(false)
+    const [isJoined, setIsJoined] = useState<boolean>(false);
+
+    const socketRef = useRef<WebSocket | null>(null)
+    const isPlayingRef = useRef<boolean>(false)
+    const currentAudioSourceRef = useRef<any>(false)
+
+    const [microphone, setMicrophone] = useState<MediaRecorder | null>(null)
+    const [captions, setCaptions] = useState<Captions[]>(messages)
+    const [loading, setLoading] = useState(false);
+
+    const makeSocketConnection = () => {
+        try {
+            setLoading(true)
+            const socket = new WebSocket("ws://localhost:8080");
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const audioQueue: any = [];
+            const transcript: any = [];
+
+            socket.onopen = async () => {
+                socketRef.current = socket;
+                console.log("client: connected to server");
+            };
+
+            socket.addEventListener("message", async (message: any) => {
+                if (message === "") {
+                    return;
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(message.data);
+                    if (data == 'deepgram is active') {
+                        changeActiveState();
+                        setIsJoined(true)
+                    }
+                    if (data && data.event == 'playAudio') {
+                        // Decode the incoming ArrayBuffer into an AudioBuffer
+                        const payload = data.media.payload
+                        audioQueue.push(payload);
+                        playNextInQueue(audioContext, audioQueue, transcript)
+                    }
+                    else if (data && data.event == 'clear') {
+                        audioQueue.length = 0
+                        if (currentAudioSourceRef.current) {
+                            currentAudioSourceRef.current.stop();
+                            currentAudioSourceRef.current.disconnect();
+                        }
+                    }
+                    else if (data.event == 'text') {
+                        transcript.push(data.media.payload)
+                    }
+                } catch (e) {
+                    console.error("Failed to parse JSON:", e);
+                    return;
+                }
+            });
+
+            socket.onclose = () => {
+                console.log("client: disconnected from server");
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const changeActiveState = async () => {
+        let microphoneObj;
+        if (!microphone) {
+            try {
+                console.log("client: waiting to open microphone");
+                microphoneObj = await getMicrophone();
+                setMicrophone(microphoneObj)
+
+                await openMicrophone(microphoneObj);
+                setLoading(false)
+                // setCaptions('Listening...')
+            } catch (error) {
+                console.error("error opening microphone:", error);
+            }
+        } else {
+            await closeMicrophone();
+            setMicrophone(null);
+            // setCaptions('RealTime conversation')
+        }
+    }
+
+    const base64ToArrayBuffer = (base64: any) => {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    const playNextInQueue = async (audioContext: any, audioQueue: any[], transcript: string[]) => {
+        if (audioQueue.length === 0 || isPlayingRef.current) {
+            return;
+        };
+        const audioData = audioQueue.shift();
+
+        const transcriptText = transcript.shift() as string
+        isPlayingRef.current = true
+
+        try {
+            const arrayBuffer = base64ToArrayBuffer(audioData);
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            // Create a new source and play the audio
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            setCaptions((prev) => [...prev, {
+                id: Math.ceil(Math.random() * 1000),
+                sender: "Alex",
+                text: transcriptText,
+                timestamp: new Date()
+            },])
+            source.connect(audioContext.destination);
+            source.start();
+
+            // if (currentAudioSource) {}
+            currentAudioSourceRef.current = source;
+
+            // When audio finishes, isPlaying is false and play the next audio
+            source.onended = () => {
+                // setIsPlaying(false);
+                isPlayingRef.current = false
+                playNextInQueue(audioContext, audioQueue, transcript);
+            };
+        } catch (error) {
+            console.error("Error decoding or playing audio chunk:", error);
+            // setIsPlaying(false);
+            isPlayingRef.current = false
+            playNextInQueue(audioContext, audioQueue, transcript); // Continue to the next in case of an error
+        }
+    };
+
+    async function getMicrophone() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            return new MediaRecorder(stream, { mimeType: "audio/webm" });
+        } catch (error) {
+            console.error("error accessing microphone:", error);
+            throw error;
+        }
+    }
+
+    async function openMicrophone(microphone: MediaRecorder,) {
+        return new Promise((resolve) => {
+            microphone.onstart = () => {
+                console.log("client: microphone opened");
+                resolve(0);
+            };
+
+            microphone.onstop = () => {
+                console.log("client: microphone closed");
+            };
+
+            microphone.ondataavailable = (event: any) => {
+                // console.log("client: microphone data received");
+                if (event.data.size > 0 && socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+                    socketRef.current.send(event.data);
+                }
+            };
+
+            microphone.start(1000);
+        });
+    }
+
+    async function closeMicrophone() {
+        microphone!.stop();
+    }
+
 
     return (
         <div className="h-screen bg-[#1C1C1C] text-white p-6">
             {/* Header */}
-            <Link to='/' className="flex items-center gap-2 mb-8">
-                <div className="bg-purple-600 p-1.5 rounded">
-                    <Users className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-xl font-bold">Interview</span>
-            </Link>
+            {!loading ? <>
+                <Link to='/' className="flex items-center gap-2 mb-8">
+                    <div className="bg-purple-600 p-1.5 rounded">
+                        <Users className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-xl font-bold">Interview</span>
+                </Link>
 
-            <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-20 py-10 h-full max-h-[calc(100vh-120px)]">
-                {/* Main Content */}
-                <div className="w-[75%]">
-                    {/* Video Area */}
-                    <VideoCallView isJoined={isJoined} />
+                <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-20 py-10 h-full max-h-[calc(100vh-120px)]">
+                    {/* Main Content */}
+                    <div className="w-[75%]">
+                        {/* Video Area */}
+                        <VideoCallView isJoined={isJoined} microphone={microphone} />
 
-                </div>
+                    </div>
 
-                {/* Join chat or chat screen */}
-                <div className="w-[25%] flex flex-col items-center justify-center h-full">
-                    {!isJoined ?
-                        <JoinCall setIsJoined={setIsJoined} />
-                        :
-                        <ChatScreen />
-                    }
+                    {/* Join chat or chat screen */}
+                    <div className="w-[25%] flex flex-col items-center justify-center h-full">
+                        {!isJoined ?
+                            <JoinCall onClick={makeSocketConnection} loading={loading} />
+                            :
+                            <ChatScreen captions={captions} />
+                            // <ChatScreen />
+                        }
+                    </div>
                 </div>
-            </div>
+            </>
+                : <div className='flex h-full items-center justify-center text-5xl'>Loading...</div>
+            }
         </div>
     )
 }
 
 
-const VideoCallView: React.FC<{ isJoined: boolean }> = ({ isJoined }) => {
+const VideoCallView: React.FC<{ isJoined: boolean, microphone: MediaRecorder | null }> = ({ isJoined, microphone }) => {
     const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(true);
     return (
         <div className="relative aspect-video max-h-[calc(100vh-200px)]">
             {isUserFullScreen ?
-                <UserVideoScreen isUserFullScreen={isUserFullScreen} />
+                <UserVideoScreen isUserFullScreen={isUserFullScreen} microphone={microphone} />
                 :
                 <SecondJoineeScreen />
             }
@@ -82,14 +250,17 @@ const VideoCallView: React.FC<{ isJoined: boolean }> = ({ isJoined }) => {
                 {isUserFullScreen ?
                     <SecondJoineeScreen />
                     :
-                    <UserVideoScreen isUserFullScreen={isUserFullScreen} />
+                    <UserVideoScreen isUserFullScreen={isUserFullScreen} microphone={microphone} />
                 }
             </div>}
         </div>
     )
 }
 
-const JoinCall: React.FC<{ setIsJoined: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setIsJoined }) => {
+const JoinCall: React.FC<{
+    onClick: () => void,
+    loading: boolean
+}> = ({ onClick, loading }) => {
     return (
         <div className='flex flex-col items-center '>
             <h2 className="text-2xl font-semibold mb-6">Ready to join?</h2>
@@ -98,13 +269,19 @@ const JoinCall: React.FC<{ setIsJoined: React.Dispatch<React.SetStateAction<bool
                 <AvatarFallback>R</AvatarFallback>
             </Avatar>
             <p className="text-gray-400 mb-4">Rishabh is in the call</p>
-            <Button onClick={() => setIsJoined(true)} className="bg-purple-600 hover:bg-purple-700">
-                Join Now
+            {loading ? <Button className="bg-purple-600 hover:bg-purple-700">
+                Loading...
             </Button>
+                :
+                <Button onClick={onClick} className="bg-purple-600 hover:bg-purple-700">
+                    Join Now
+                </Button>
+            }
         </div>)
 }
 
-const ChatScreen = () => {
+const ChatScreen: React.FC<{ captions: Captions[] }> = ({ captions }) => {
+    // const ChatScreen = () => {
     return (
         <Card className="w-80 rounded-lg overflow-hidden bg-white h-full">
             <div className="p-2 px-4 border-b border-gray-200 flex justify-between items-center">
@@ -112,7 +289,7 @@ const ChatScreen = () => {
             </div>
             <ScrollArea className="h-[calc(100vh-280px)]">
                 <div className="p-4 space-y-4">
-                    {messages.map((message) => (
+                    {captions.map((message) => (
                         <div key={message.id} className="space-y-2">
                             <div className="text-sm text-gray-500">{message.sender}</div>
                             <div className={`p-3 rounded-lg max-w-[90%] ${message.sender === "Aaron"
@@ -128,15 +305,15 @@ const ChatScreen = () => {
         </Card>)
 }
 
-const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean }> = ({ isUserFullScreen }) => {
+const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, microphone: MediaRecorder | null }> = ({ isUserFullScreen, microphone }) => {
     const [isCameraOn, setIsCameraOn] = useState(false)
-    const [isMicOn, setIsMicOn] = useState(false)
+    // const [microphone, setMicrophone] = useState<MediaRecorder | null>(null)
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
 
-    const getMic = () => {
-        setIsMicOn(!isMicOn)
-    }
+    // const getMic = () => {
+    //     setIsMicOn(!isMicOn)
+    // }
 
     useEffect(() => {
         if (isCameraOn) {
@@ -189,12 +366,12 @@ const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean }> = ({ isUserFullS
                 {isCameraOn ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
             </Button>
             <Button
-                variant={isMicOn ? "ghost" : "destructive"}
+                variant={microphone ? "ghost" : "destructive"}
                 size="icon"
-                className={isMicOn ? 'border border-white' : ''}
-                onClick={() => getMic()}
+                className={microphone ? 'border border-white' : ''}
+            // onClick={() => getMic()}
             >
-                {isMicOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
+                {microphone ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
             </Button>
         </div>}
     </div>)
