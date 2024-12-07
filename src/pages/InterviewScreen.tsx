@@ -18,8 +18,6 @@ const messages: Captions[] = [
 ]
 
 export default function InterviewPage() {
-    console.log(1)
-    console.log(import.meta.env.VITE_WEBSOCKET_URL)
     const { type } = useParams()
     console.log(type)
 
@@ -36,7 +34,6 @@ export default function InterviewPage() {
     const makeSocketConnection = () => {
         try {
             setLoading(true)
-            console.log(123)
             console.log(import.meta.env.VITE_WEBSOCKET_URL)
             const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
             const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
