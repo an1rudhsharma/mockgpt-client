@@ -34,7 +34,8 @@ export default function InterviewPage() {
     const makeSocketConnection = () => {
         try {
             setLoading(true)
-            const socket = new WebSocket("ws://localhost:8080");
+            console.log(import.meta.env.VITE_WEBSOCKET_URL)
+            const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
             const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
             const audioQueue: any = [];
             const transcript: any = [];
