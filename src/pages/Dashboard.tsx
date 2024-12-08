@@ -1,7 +1,18 @@
-import { Database, Home, History, LayoutDashboard, Users, LineChart, FileSpreadsheet } from 'lucide-react'
+import { Home, History, Users, Database, LayoutDashboard, LineChart, FileSpreadsheet } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Link } from 'react-router-dom'
+
+const sidebarButtons = [{
+    id: 1,
+    icon: <Home className="h-5 w-5 mr-3" />,
+    title: "Home"
+},
+{
+    id: 2,
+    icon: <History className="h-5 w-5 mr-3" />,
+    title: "History"
+}]
 
 const interviewCards = [
     { icon: <Database className="h-12 w-12" />, label: "Backend", to: 'backend-development-interview' },
@@ -22,14 +33,10 @@ export default function Dashboard() {
                     <span className="text-xl font-bold">Interview</span>
                 </div>
                 <nav className="space-y-2">
-                    <Button variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-[#2C2C2C]">
-                        <Home className="h-5 w-5 mr-3" />
-                        Home
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-[#2C2C2C]">
-                        <History className="h-5 w-5 mr-3" />
-                        History
-                    </Button>
+                    {sidebarButtons.map(({ id, icon, title }) => <Button key={id} variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-[#2C2C2C]">
+                        {icon}
+                        {title}
+                    </Button>)}
                 </nav>
             </aside>
             <main className="flex-1 p-8 pt-10 lg:pt-20">
