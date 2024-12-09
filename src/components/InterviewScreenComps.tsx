@@ -54,13 +54,28 @@ export const JoinCall: React.FC<{
 
 // ChatScreen
 export const ChatScreen: React.FC<{ captions: Captions[] }> = ({ captions }) => {
-    console.log(captions)
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+    // Scroll to the bottom function for chat screen
+    const scrollToBottom = () => {
+        const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+
+        if (viewport) {
+            // Scroll to bottom
+            viewport.scrollTop = viewport.scrollHeight;
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [captions]);
+
     return (
         <Card className="w-80 rounded-lg overflow-hidden bg-white h-full">
             <div className="p-2 px-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="font-semibold text-gray-900">Live Transcript</h3>
             </div>
-            <ScrollArea className="h-[calc(100vh-280px)]">
+            <ScrollArea ref={scrollAreaRef} className="h-[calc(100vh-280px)]" >
                 <div className="p-4 space-y-1">
                     {captions.map((message) => (
                         <div key={message.id} className="space-y-1">
