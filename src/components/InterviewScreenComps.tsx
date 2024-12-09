@@ -5,7 +5,6 @@ import { Captions } from "@/interfaces/types";
 import { Card } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { Mic, MicOff, Video, VideoOff } from "lucide-react";
-import SoundWave from "./sound-wave";
 
 // VideoCall View
 export const VideoCallView: React.FC<{ isJoined: boolean, isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isJoined, isMicropohoneOn, changeMicrophoneState }) => {
@@ -120,9 +119,6 @@ const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: b
     }, [isCameraOn])
     return (<div className='relative h-full bg-[#2C2C2C] rounded-lg flex items-center justify-center overflow-hidden'>
 
-        <div className="absolute -z-10">
-            <SoundWave />
-        </div>
         {/* User 1 */}
         {isCameraOn ?
             <video ref={videoRef} className='absolute top-0 left-0 w-full h-full object-cover' autoPlay playsInline />
