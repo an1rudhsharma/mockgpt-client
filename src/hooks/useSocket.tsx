@@ -14,7 +14,7 @@ const messages: Captions[] = [
     {
         id: 1,
         sender: "Alex",
-        text: "Hello Abhay, How was your day? Let's start with your backend interview",
+        text: "Hello Abhay, How was your day? Let's start with your backend interview. ",
         timestamp: new Date()
     },
 ]
@@ -58,12 +58,22 @@ export const useWebSocket = (): WebSocketHook => {
                     }
 
                     if (data?.event === 'clear') {
-                        console.log("clear audio")
+                        // Clearing all queued audios and text messages
                         clearAudioQueue(audioQueueRef, currentAudioSourceRef);
+                        transcript.length = 0
                     }
 
                     if (data?.event === 'text') {
                         transcript.push(data.media.payload);
+                    }
+
+                    if (data?.event === 'user') {
+                        setCaptions((prev) => [...prev, {
+                            id: Math.ceil(Math.random() * 10000),
+                            sender: "user",
+                            text: data.media.payload,
+                            timestamp: new Date()
+                        }])
                     }
                 } catch (error) {
                     console.error("Failed to parse JSON:", error);

@@ -59,7 +59,6 @@ const openMicrophone = (
                     socketRef.current &&
                     socketRef.current.readyState === WebSocket.OPEN
                 ) {
-                    console.log('sending to server');
                     socketRef.current.send(event.data);
                 }
             };

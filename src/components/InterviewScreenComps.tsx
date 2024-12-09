@@ -5,28 +5,26 @@ import { Captions } from "@/interfaces/types";
 import { Card } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import SoundWave from "./sound-wave";
 
 // VideoCall View
 export const VideoCallView: React.FC<{ isJoined: boolean, isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isJoined, isMicropohoneOn, changeMicrophoneState }) => {
     const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(true);
     return (
-        <div className="relative aspect-video max-h-[calc(100vh-200px)]">
-            {isUserFullScreen ?
-                <UserVideoScreen isUserFullScreen={isUserFullScreen} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} />
-                :
-                <SecondJoineeScreen />
-            }
+        <div className="relative w-full h-full">
 
-            {isJoined && <div
-                onClick={() => { setIsUserFullScreen(!isUserFullScreen) }}
-                className="absolute bottom-4 right-4 w-48 aspect-video cursor-pointer"
-            >
-                {isUserFullScreen ?
+            <div onClick={() => { if (!isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }} className={`${isUserFullScreen ? 'w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'}`}>
+                <UserVideoScreen isUserFullScreen={isUserFullScreen} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} />
+            </div>
+
+            {isJoined &&
+                <div
+                    onClick={() => { if (isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }}
+                    className={`${!isUserFullScreen ? 'w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'}`}
+                >
                     <SecondJoineeScreen />
-                    :
-                    <UserVideoScreen isUserFullScreen={isUserFullScreen} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} />
-                }
-            </div>}
+                </div>
+            }
         </div>
     )
 }
@@ -57,17 +55,18 @@ export const JoinCall: React.FC<{
 
 // ChatScreen
 export const ChatScreen: React.FC<{ captions: Captions[] }> = ({ captions }) => {
+    console.log(captions)
     return (
         <Card className="w-80 rounded-lg overflow-hidden bg-white h-full">
             <div className="p-2 px-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="font-semibold text-gray-900">Live Transcript</h3>
             </div>
             <ScrollArea className="h-[calc(100vh-280px)]">
-                <div className="p-4 space-y-4">
+                <div className="p-4 space-y-1">
                     {captions.map((message) => (
-                        <div key={message.id} className="space-y-2">
-                            <div className="text-sm text-gray-500">{message.sender}</div>
-                            <div className={`p-3 rounded-lg max-w-[90%] ${message.sender === "Aaron"
+                        <div key={message.id} className="space-y-1">
+                            <div className={`${message.sender === "user" ? 'ml-auto' : ''} w-fit text-sm text-gray-500`}>{message.sender}</div>
+                            <div className={`p-3 rounded-lg max-w-[90%] ${message.sender === "user"
                                 ? "bg-purple-100 text-purple-900 ml-auto"
                                 : "bg-gray-100 text-gray-900"
                                 }`}>
@@ -121,6 +120,9 @@ const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: b
     }, [isCameraOn])
     return (<div className='relative h-full bg-[#2C2C2C] rounded-lg flex items-center justify-center overflow-hidden'>
 
+        <div className="absolute -z-10">
+            <SoundWave />
+        </div>
         {/* User 1 */}
         {isCameraOn ?
             <video ref={videoRef} className='absolute top-0 left-0 w-full h-full object-cover' autoPlay playsInline />

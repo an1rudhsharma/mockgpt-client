@@ -18,15 +18,12 @@ export const playNextInQueue = async (
     currentAudioSourceRef: React.MutableRefObject<AudioBufferSourceNode | null>,
     setCaptions: React.Dispatch<React.SetStateAction<Captions[]>>
 ) => {
-
-
     if (audioQueueRef.current.length === 0 || isPlayingRef.current) {
-        console.log('isPlayingRef');
         return;
     };
 
     const audioData = audioQueueRef.current.shift()!;
-    const transcriptText = transcript.shift() as string;
+    let transcriptText = transcript.shift() as string;
 
     isPlayingRef.current = true;
 
@@ -37,12 +34,32 @@ export const playNextInQueue = async (
         const source = audioContext.createBufferSource();
         source.buffer = audioBuffer;
 
-        setCaptions((prev) => [...prev, {
-            id: Math.ceil(Math.random() * 1000),
-            sender: "Alex",
-            text: transcriptText,
-            timestamp: new Date()
-        }]);
+        if (transcriptText) {
+            setCaptions((prev) => {
+                const lastMessage = prev[prev.length - 1]
+                let newArr;
+
+                //  If the last message is of interviewer append in it else add a new user message
+                if (lastMessage && lastMessage.sender !== 'user') {
+                    prev.pop();
+                    newArr = [...prev, {
+                        id: lastMessage.id,
+                        sender: lastMessage.sender,
+                        text: lastMessage.text + transcriptText,
+                        timestamp: lastMessage.timestamp
+                    }]
+                } else {
+                    newArr = [...prev, {
+                        id: Math.ceil(Math.random() * 1000),
+                        sender: "user",
+                        text: transcriptText,
+                        timestamp: new Date()
+                    }]
+                }
+
+                return newArr;
+            });
+        }
 
         source.connect(audioContext.destination);
         source.start();
@@ -51,8 +68,6 @@ export const playNextInQueue = async (
 
         source.onended = () => {
             isPlayingRef.current = false;
-            console.log('audio end');
-
             playNextInQueue(audioContext, audioQueueRef, transcript, isPlayingRef, currentAudioSourceRef, setCaptions);
         };
     } catch (error) {
