@@ -51,7 +51,7 @@ export const playNextInQueue = async (
                 } else {
                     newArr = [...prev, {
                         id: Math.ceil(Math.random() * 1000),
-                        sender: "user",
+                        sender: "Alex",
                         text: transcriptText,
                         timestamp: new Date()
                     }]
