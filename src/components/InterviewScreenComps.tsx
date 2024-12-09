@@ -7,8 +7,8 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Mic, MicOff, Video, VideoOff } from "lucide-react";
 
 // VideoCall View
-export const VideoCallView: React.FC<{ isJoined: boolean, isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isJoined, isMicropohoneOn, changeMicrophoneState }) => {
-    const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(true);
+export const VideoCallView: React.FC<{ isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isMicropohoneOn, changeMicrophoneState }) => {
+    const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(false);
     return (
         <div className="relative w-full h-full">
 
@@ -16,14 +16,12 @@ export const VideoCallView: React.FC<{ isJoined: boolean, isMicropohoneOn: boole
                 <UserVideoScreen isUserFullScreen={isUserFullScreen} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} />
             </div>
 
-            {isJoined &&
-                <div
-                    onClick={() => { if (isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }}
-                    className={`${!isUserFullScreen ? 'w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'}`}
-                >
-                    <SecondJoineeScreen />
-                </div>
-            }
+            <div
+                onClick={() => { if (isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }}
+                className={`${!isUserFullScreen ? 'w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'}`}
+            >
+                <SecondJoineeScreen />
+            </div>
         </div>
     )
 }
@@ -94,34 +92,37 @@ export const ChatScreen: React.FC<{ captions: Captions[] }> = ({ captions }) => 
 }
 
 // User video screen
-const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isUserFullScreen, isMicropohoneOn, changeMicrophoneState }) => {
+export const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: boolean, changeMicrophoneState: () => void }> = ({ isUserFullScreen = true, isMicropohoneOn, changeMicrophoneState }) => {
     const [isCameraOn, setIsCameraOn] = useState(false)
+    const [cameraLoading, setCameraLoading] = useState(false)
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
 
     useEffect(() => {
+        console.log(isUserFullScreen);
         if (isCameraOn) {
-
             const constraints = {
                 audio: false,
                 video: true,
             };
 
+            // Get Camera
             navigator.mediaDevices.getUserMedia(constraints).then((mediaStream) => {
                 streamRef.current = mediaStream;
-                const videoTracks = streamRef.current.getVideoTracks();
-                console.log("Got stream with constraints:", constraints);
-                console.log(`Using video device: ${videoTracks[0].label}`);
+                // const videoTracks = streamRef.current.getVideoTracks();
+                // console.log("Got stream with constraints:", constraints);
+                // console.log(`Using video device: ${videoTracks[0].label}`);
                 streamRef.current.onremovetrack = () => {
                     console.log("Stream ended");
                 };
 
                 if (videoRef.current) {
-                    console.log('kjsbdvkjkj')
                     videoRef.current.srcObject = streamRef.current;
                 }
             }).catch((error) => {
                 console.error(`getUserMedia error: ${error.name}`, error);
+            }).finally(() => {
+                setCameraLoading(false);
             })
 
         }
@@ -132,20 +133,25 @@ const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: b
             }
         };
     }, [isCameraOn])
-    return (<div className='relative h-full bg-[#2C2C2C] rounded-lg flex items-center justify-center overflow-hidden'>
 
-        {/* User 1 */}
-        {isCameraOn ?
-            <video ref={videoRef} className='absolute top-0 left-0 w-full h-full object-cover' autoPlay playsInline />
-            :
-            <div className={`${isUserFullScreen ? 'text-2xl' : 'text-md'} text-gray-400`}>Camera is off</div>}
+    return (<div className='relative h-full aspect-video bg-[#2C2C2C] rounded-lg flex items-center justify-center overflow-hidden'>
 
-        {isUserFullScreen && <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full flex gap-5">
+        {/* User Name */}
+        <div className="text-md font-semibold absolute top-5 left-5 z-10">Abhay Sharma</div>
+
+        {/* User Video */}
+        <video ref={videoRef} className={`${isCameraOn && !cameraLoading ? 'absolute top-0 left-0 w-full h-full object-cover scale-x-[-1]' : 'hidden'}`} autoPlay playsInline />
+
+        {/* Camera State */}
+        <div className="text-2xl text-gray-400 z-10">  {isCameraOn ?
+            cameraLoading ? 'Camera is starting' : null : "Camera is off"}</div>
+
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full flex gap-5">
             <Button
                 variant={isCameraOn ? "ghost" : "destructive"}
                 size="icon"
                 className={isCameraOn ? 'border border-white' : ''}
-                onClick={() => setIsCameraOn(!isCameraOn)}
+                onClick={() => { setCameraLoading(true); setIsCameraOn(!isCameraOn); }}
             >
                 {isCameraOn ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
             </Button>
@@ -157,7 +163,7 @@ const UserVideoScreen: React.FC<{ isUserFullScreen?: boolean, isMicropohoneOn: b
             >
                 {isMicropohoneOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
             </Button>
-        </div>}
+        </div>
     </div>)
 }
 
