@@ -4,11 +4,12 @@ import { Button } from "./ui/button";
 import { Captions } from "@/interfaces/types";
 import { Card } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
 
 
 // VideoCall View Props
 interface VideoCallViewProps {
+    socketRef: React.MutableRefObject<WebSocket | null>;
     isMicropohoneOn: boolean,
     changeMicrophoneState: () => void,
     isCameraOn: boolean,
@@ -19,7 +20,7 @@ interface VideoCallViewProps {
 }
 
 // VideoCall View
-export const VideoCallView: React.FC<VideoCallViewProps> = ({ isMicropohoneOn, changeMicrophoneState, isCameraOn, cameraLoading, setCameraLoading, setIsCameraOn, captions }) => {
+export const VideoCallView: React.FC<VideoCallViewProps> = ({ socketRef, isMicropohoneOn, changeMicrophoneState, isCameraOn, cameraLoading, setCameraLoading, setIsCameraOn, captions }) => {
     const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(false);
     return (
         <div className='relative h-full w-full flex flex-col md:flex-row gap-1 items-center justify-center '>
@@ -38,22 +39,7 @@ export const VideoCallView: React.FC<VideoCallViewProps> = ({ isMicropohoneOn, c
                 </div>
 
                 <div className="p-3 flex gap-5 justify-center rounded-lg w-full max-w-[900px] bg-[#2C2C2C]">
-                    <Button
-                        variant={isCameraOn ? "ghost" : "destructive"}
-                        size="icon"
-                        className={isCameraOn ? 'border border-white' : ''}
-                        onClick={() => { setCameraLoading(true); setIsCameraOn(!isCameraOn); }}
-                    >
-                        {isCameraOn ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
-                    </Button>
-                    <Button
-                        variant={isMicropohoneOn ? "ghost" : "destructive"}
-                        size="icon"
-                        className={isMicropohoneOn ? 'border border-white' : ''}
-                        onClick={() => changeMicrophoneState()}
-                    >
-                        {isMicropohoneOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-                    </Button>
+                    <VideoScreenButtons socketRef={socketRef} onCall={true} changeMicrophoneState={changeMicrophoneState} isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} isMicropohoneOn={isMicropohoneOn} setCameraLoading={setCameraLoading} />
                 </div>
 
             </div>
@@ -210,6 +196,8 @@ const SecondJoineeScreen: React.FC<{ isUserFullScreen: boolean }> = ({ isUserFul
 
 // VideoButtons Props
 interface VideoButtonsProps {
+    socketRef?: React.MutableRefObject<WebSocket | null>,
+    onCall?: boolean,
     isMicropohoneOn: boolean,
     changeMicrophoneState: () => void,
     isCameraOn: boolean,
@@ -217,9 +205,17 @@ interface VideoButtonsProps {
     setCameraLoading: React.Dispatch<React.SetStateAction<boolean>>,
 }
 // Video screen Buttons 
-export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({ isCameraOn, setCameraLoading, setIsCameraOn, isMicropohoneOn, changeMicrophoneState }) => {
+export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({ socketRef, onCall = false, isCameraOn, setCameraLoading, setIsCameraOn, isMicropohoneOn, changeMicrophoneState }) => {
+
+    const endCall = () => {
+        if (socketRef && socketRef.current) {
+            socketRef.current.close();
+            console.log('Call has ended')
+        }
+    }
+
     return (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full flex gap-5">
+        <>
             <Button
                 variant={isCameraOn ? "ghost" : "destructive"}
                 size="icon"
@@ -236,6 +232,16 @@ export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({ isCameraOn, se
             >
                 {isMicropohoneOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
             </Button>
-        </div>
+            {onCall &&
+                <Button
+                    variant={"destructive"}
+                    size="icon"
+                    className="w-20"
+                    onClick={endCall}
+                >
+                    <PhoneOff />
+                </Button>
+            }
+        </>
     )
 }

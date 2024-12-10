@@ -81,6 +81,14 @@ export const useWebSocket = (): WebSocketHook => {
             });
 
             socket.onclose = () => {
+                setIsJoined(false);
+                setCaptions([]);
+                isPlayingRef.current = false;
+                audioQueueRef.current = [];
+                currentAudioSourceRef.current?.stop();
+                currentAudioSourceRef.current = null;
+
+                socketRef.current = null;
                 console.log("client: disconnected from server");
             };
         } catch (error) {

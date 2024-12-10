@@ -38,7 +38,9 @@ export default function InterviewPage() {
                         <div className='h-full w-full flex flex-col md:flex-row gap-5 items-center justify-center'>
                             <div className="relative w-full max-w-3xl bg-[#2C2C2C] rounded-lg overflow-hidden">
                                 <UserVideoScreen isCameraOn={isCameraOn} cameraLoading={cameraLoading} setCameraLoading={setCameraLoading} />
-                                <VideoScreenButtons setIsCameraOn={setIsCameraOn} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} isCameraOn={isCameraOn} setCameraLoading={setCameraLoading} />
+                                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full flex gap-5">
+                                    <VideoScreenButtons setIsCameraOn={setIsCameraOn} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} isCameraOn={isCameraOn} setCameraLoading={setCameraLoading} />
+                                </div>
                             </div>
 
                             <div className="w-full max-w-xs flex flex-col items-center justify-center ">
@@ -51,6 +53,7 @@ export default function InterviewPage() {
                         :
 
                         <VideoCallView
+                            socketRef={socketRef}
                             isMicropohoneOn={isMicropohoneOn}
                             changeMicrophoneState={changeMicrophoneState}
                             isCameraOn={isCameraOn}
