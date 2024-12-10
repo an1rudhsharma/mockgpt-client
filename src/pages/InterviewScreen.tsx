@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useWebSocket } from '@/hooks/useSocket'
 import { useMicrophone } from '@/hooks/useMicrophone'
-import { ChatScreen, JoinCall, UserVideoScreen, VideoCallView } from '@/components/InterviewScreenComps'
+import { JoinCall, UserVideoScreen, VideoCallView, VideoScreenButtons } from '@/components/InterviewScreenComps'
+import useVideoScreen from '@/hooks/useVideoCamera'
 
 export default function InterviewPage() {
     const { type } = useParams();
@@ -17,6 +18,8 @@ export default function InterviewPage() {
 
     const { isMicropohoneOn, changeMicrophoneState } = useMicrophone(socketRef);
 
+    const { cameraLoading, isCameraOn, setCameraLoading, setIsCameraOn } = useVideoScreen()
+
     useEffect(() => {
         console.log('Interview type:', type);
     }, [type]);
@@ -29,12 +32,13 @@ export default function InterviewPage() {
                 </div>
                 <span className="text-xl font-bold">Interview</span>
             </Link>
-            <div className="h-full w-full px-20 py-10 max-h-[calc(100vh-120px)]">
+            <div className="h-full w-full px-20  max-h-[calc(100vh-120px)]">
                 {!loading ? (
                     !isJoined ?
                         <div className='h-full w-full flex flex-col md:flex-row gap-5 items-center justify-center'>
-                            <div className="w-full max-w-3xl">
-                                <UserVideoScreen isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} />
+                            <div className="relative w-full max-w-3xl bg-[#2C2C2C] rounded-lg overflow-hidden">
+                                <UserVideoScreen isCameraOn={isCameraOn} cameraLoading={cameraLoading} setCameraLoading={setCameraLoading} />
+                                <VideoScreenButtons setIsCameraOn={setIsCameraOn} isMicropohoneOn={isMicropohoneOn} changeMicrophoneState={changeMicrophoneState} isCameraOn={isCameraOn} setCameraLoading={setCameraLoading} />
                             </div>
 
                             <div className="w-full max-w-xs flex flex-col items-center justify-center ">
@@ -45,15 +49,17 @@ export default function InterviewPage() {
                             </div>
                         </div>
                         :
-                        <div className='h-full w-full flex flex-col md:flex-row gap-5 items-center justify-center'>
-                            <div className="w-full max-w-4xl">
-                                <VideoCallView
-                                    isMicropohoneOn={isMicropohoneOn}
-                                    changeMicrophoneState={changeMicrophoneState}
-                                />
-                            </div>
-                            <div className="w-full max-w-xs flex flex-col items-center justify-center">
-                                <ChatScreen captions={captions} /> </div></div>)
+
+                        <VideoCallView
+                            isMicropohoneOn={isMicropohoneOn}
+                            changeMicrophoneState={changeMicrophoneState}
+                            isCameraOn={isCameraOn}
+                            cameraLoading={cameraLoading}
+                            setCameraLoading={setCameraLoading}
+                            setIsCameraOn={setIsCameraOn}
+                            captions={captions}
+                        />
+                )
                     : (
                         <div className='flex h-full items-center justify-center text-5xl'>
                             Loading...
