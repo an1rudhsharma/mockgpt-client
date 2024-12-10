@@ -5,6 +5,7 @@ import { Captions } from "@/interfaces/types";
 import { Card } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
+import SoundWave from "./sound-wave";
 
 
 // VideoCall View Props
@@ -16,17 +17,18 @@ interface VideoCallViewProps {
     setIsCameraOn: React.Dispatch<React.SetStateAction<boolean>>,
     cameraLoading: boolean,
     setCameraLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    captions: Captions[]
+    captions: Captions[],
+    analyser: AnalyserNode | null;
 }
 
 // VideoCall View
-export const VideoCallView: React.FC<VideoCallViewProps> = ({ socketRef, isMicropohoneOn, changeMicrophoneState, isCameraOn, cameraLoading, setCameraLoading, setIsCameraOn, captions }) => {
+export const VideoCallView: React.FC<VideoCallViewProps> = ({ socketRef, isMicropohoneOn, changeMicrophoneState, isCameraOn, cameraLoading, setCameraLoading, setIsCameraOn, captions, analyser }) => {
     const [isUserFullScreen, setIsUserFullScreen] = useState<boolean>(false);
     return (
         <div className='relative h-full w-full flex flex-col md:flex-row gap-1 items-center justify-center '>
             <div className="h-full w-full flex flex-col gap-5 items-center justify-center">
                 <div className="relative w-full aspect-video max-w-[900px]">
-                    <div onClick={() => { if (!isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }} className={`${isUserFullScreen ? 'bg-[#2C2C2C] w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'bg-[#1C1C1C] absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'} rounded-lg overflow-hidden`}>
+                    <div onClick={() => { if (!isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }} className={`${isUserFullScreen ? 'bg-[#2C2C2C] w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'z-50 bg-[#1C1C1C] absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'} rounded-lg overflow-hidden`}>
                         <UserVideoScreen isUserFullScreen={isUserFullScreen} isCameraOn={isCameraOn} cameraLoading={cameraLoading} setCameraLoading={setCameraLoading} />
                     </div>
 
@@ -34,7 +36,7 @@ export const VideoCallView: React.FC<VideoCallViewProps> = ({ socketRef, isMicro
                         onClick={() => { if (isUserFullScreen) setIsUserFullScreen(!isUserFullScreen); }}
                         className={`${!isUserFullScreen ? 'bg-[#2C2C2C] w-full h-full aspect-video max-h-[calc(100vh-200px)]' : 'bg-[#1C1C1C] absolute bottom-4 right-4 w-48 aspect-video cursor-pointer'} rounded-lg overflow-hidden`}
                     >
-                        <SecondJoineeScreen isUserFullScreen={isUserFullScreen} />
+                        <SecondJoineeScreen isUserFullScreen={isUserFullScreen} analyser={analyser} />
                     </div>
                 </div>
 
@@ -180,16 +182,18 @@ export const UserVideoScreen: React.FC<UserScreenProps> = ({ isUserFullScreen = 
 }
 
 // Interviewer Video Screen
-const SecondJoineeScreen: React.FC<{ isUserFullScreen: boolean }> = ({ isUserFullScreen }) => {
+const SecondJoineeScreen: React.FC<{ isUserFullScreen: boolean, analyser: AnalyserNode | null }> = ({ isUserFullScreen, analyser }) => {
     return (
-        <div className='h-full w-full rounded-lg flex flex-col items-center justify-center gap-3 border border-gray-700'>
-            <Avatar className={`${isUserFullScreen ? "w-8 h-8" : "w-20 h-20"}`}>
+        <div className='h-full w-full rounded-lg flex flex-col items-center justify-center gap-3 z-10'>
+            <div className="absolute top-1/2 left-0 w-full h-full transform -translate-y-1/2">
+                <SoundWave analyser={analyser} isUserFullScreen={isUserFullScreen} />
+            </div>
+            <div className={`${!isUserFullScreen ? 'text-2xl font-semibold top-5 left-5 ' : 'hidden'} absolute z-10`}> Rishabh</div>
+            <Avatar className={`${isUserFullScreen ? "w-12 h-12" : "w-32 h-32"}`}>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>R</AvatarFallback>
             </Avatar>
-            <div className={`${isUserFullScreen ? "text-md" : " text-xl font-semibold"}`}>
-                Rishabh
-            </div>
+
         </div>
     )
 }

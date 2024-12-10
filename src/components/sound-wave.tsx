@@ -1,39 +1,14 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 
-const SoundWave: React.FC = () => {
+
+interface SoundWaveProps {
+    analyser: AnalyserNode | null;
+    isUserFullScreen: boolean;
+}
+
+const SoundWave: React.FC<SoundWaveProps> = ({ analyser, isUserFullScreen }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
-    const [analyser, setAnalyser] = useState<AnalyserNode | null>(null)
     const animationRef = useRef<number>()
-
-    useEffect(() => {
-        const setupAudio = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                const context = new AudioContext()
-                const source = context.createMediaStreamSource(stream)
-                const analyserNode = context.createAnalyser()
-                analyserNode.fftSize = 2048
-                source.connect(analyserNode)
-
-                setAudioContext(context)
-                setAnalyser(analyserNode)
-            } catch (error) {
-                console.error('Error accessing microphone:', error)
-            }
-        }
-
-        setupAudio()
-
-        return () => {
-            if (audioContext) {
-                audioContext.close()
-            }
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current)
-            }
-        }
-    }, [])
 
     useEffect(() => {
         if (!analyser || !canvasRef.current) return
@@ -48,9 +23,10 @@ const SoundWave: React.FC = () => {
 
             analyser.getByteTimeDomainData(dataArray)
 
-            ctx.fillStyle = 'rgb(0, 0, 0)'
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = 'transparent'
 
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.lineWidth = 2
             ctx.strokeStyle = 'rgb(255,255, 255)'
             ctx.beginPath()
@@ -85,12 +61,12 @@ const SoundWave: React.FC = () => {
     }, [analyser])
 
     return (
-        <div className="w-full mx-auto p-4 bg-red-500">
+        <div className="w-full h-full overflow-hidden p-[1px]">
             <canvas
                 ref={canvasRef}
-                width={800}
-                height={200}
-                className="w-full border bg-black border-gray-300 rounded-lg"
+                width={isUserFullScreen ? 400 : 800}
+                height={isUserFullScreen ? 200 : 400}
+                className="w-full h-full rounded-lg"
             />
         </div>
     )

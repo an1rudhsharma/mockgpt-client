@@ -13,7 +13,8 @@ export default function InterviewPage() {
         loading,
         socketRef,
         captions,
-        makeSocketConnection
+        makeSocketConnection,
+        analyser
     } = useWebSocket();
 
     const { isMicropohoneOn, changeMicrophoneState } = useMicrophone(socketRef);
@@ -61,6 +62,7 @@ export default function InterviewPage() {
                             setCameraLoading={setCameraLoading}
                             setIsCameraOn={setIsCameraOn}
                             captions={captions}
+                            analyser={analyser}
                         />
                 )
                     : (
