@@ -14,7 +14,7 @@ function LoginPage() {
                 <h2 className="text-2xl font-bold">Log in</h2>
                 <p className="text-gray-500">
                     New to interview gpt?{" "}
-                    <Link to="/auth/signup" className="text-blue-600 hover:underline">
+                    <Link to="/signup" className="text-blue-600 hover:underline">
                         Sign up for an account
                     </Link>
                 </p>
