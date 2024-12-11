@@ -12,23 +12,23 @@ export default function LandingPage() {
                 className="absolute inset-0 bg-[linear-gradient(rgba(10,10,10,0.8),rgba(10,10,10,0.8))]"
                 style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1h98v98H1V1z' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='0.5'/%3E%3C/svg%3E")`,
-                    backgroundSize: '40px 40px'
+                    backgroundSize: '20px 20px'
                 }}
             />
 
             {/* Content */}
-            <div className="relative">
+            <div className="relative ">
                 {/* Navigation */}
-                <nav className="border-b border-gray-800">
+                <nav className="border-b border-gray-800 bg-[#0A0A0A]">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex items-center justify-between h-16">
                             {/* Logo */}
-                            <div className="flex items-center gap-2">
+                            <Link to='/' className="flex items-center gap-2">
                                 <div className="bg-purple-600 p-1.5 rounded">
                                     <Users className="h-6 w-6 text-white" />
                                 </div>
                                 <span className="text-xl font-bold">Interview</span>
-                            </div>
+                            </Link>
 
                             {/* Navigation Links */}
                             <div className="hidden md:flex items-center gap-8">
@@ -78,7 +78,7 @@ export default function LandingPage() {
                 {/* Hero Section */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 text-center">
                     {/* New Badge */}
-                    <div className="inline-flex items-center gap-2 bg-[#1C1C1C] rounded-full px-4 py-1 mb-8">
+                    <div className="inline-flex items-center gap-2 bg-[#1C1C1C] rounded-full px-2 py-2 mb-8">
                         <span className="bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">
                             New
                         </span>
@@ -105,11 +105,11 @@ export default function LandingPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button
                             className="bg-white text-black hover:bg-gray-200 text-lg px-8 py-6"
-                            onClick={() => navigate('/auth/signup')}
+                            onClick={() => navigate('/signup')}
                         >
                             Start free trial →
                         </Button>
-                        <Button variant="outline" className="text-lg px-8 py-6">
+                        <Button variant="outline" className="text-lg px-8 py-6 text-black">
                             Book a demo
                         </Button>
                     </div>
