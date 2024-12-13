@@ -272,7 +272,7 @@ export default function LandingPage() {
                                 <Users className="h-6 w-6 text-white" />
                             </div>
                         </div>
-                        <h2 className="text-4xl font-bold mb-8">Try InterviewGPT today</h2>
+                        <h2 className="text-4xl font-bold mb-8">Try HelloGenAI today</h2>
                         <Button
                             size="lg"
                             className="bg-white text-black hover:bg-gray-200"
