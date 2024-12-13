@@ -1,57 +1,57 @@
-import { Home, History, Users, Database, LayoutDashboard, LineChart, FileSpreadsheet } from 'lucide-react'
+import { Home, History, Users, NotebookText } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Link } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
+import DashboardHome from '@/components/dashboard/Home'
+import DashboardInterview from '@/components/dashboard/Interview'
+import DashboardHistory from '@/components/dashboard/History'
+import ReviewPage from '@/components/dashboard/ReviewPage'
 
 const sidebarButtons = [{
     id: 1,
     icon: <Home className="h-5 w-5 mr-3" />,
-    title: "Home"
+    title: "Home",
+    to: '/dashboard'
+}, {
+    id: 2,
+    icon: <NotebookText className="h-5 w-5 mr-3" />,
+    title: "Give Interview",
+    to: '/dashboard/interview',
 },
 {
-    id: 2,
+    id: 3,
     icon: <History className="h-5 w-5 mr-3" />,
-    title: "History"
+    title: "History",
+    to: '/dashboard/history',
 }]
 
-const interviewCards = [
-    { icon: <Database className="h-12 w-12" />, label: "Backend", to: 'backend-development-interview' },
-    { icon: <LayoutDashboard className="h-12 w-12" />, label: "Frontend", to: 'frontend-development-interview' },
-    { icon: <Users className="h-12 w-12" />, label: "Product Management", to: 'product-management-interview' },
-    { icon: <LineChart className="h-12 w-12" />, label: "Data Science", to: 'datra-science-interview' },
-    { icon: <FileSpreadsheet className="h-12 w-12" />, label: "Analytics", to: 'data-analytics-interview' },
-]
 
 export default function Dashboard() {
     return (
         <div className="flex h-screen bg-[#1C1C1C] text-white">
-            <aside className="w-64 bg-[#121212] p-4 flex flex-col">
-                <div className="flex items-center gap-2 mb-8">
+            <aside className="fixed w-64 h-screen bg-[#121212] p-4 flex flex-col">
+                <Link to='/' className="flex items-center gap-2 mb-8">
                     <div className="bg-purple-600 p-1.5 rounded">
                         <Users className="h-6 w-6 text-white" />
                     </div>
                     <span className="text-xl font-bold">Interview</span>
-                </div>
+                </Link>
                 <nav className="space-y-2">
-                    {sidebarButtons.map(({ id, icon, title }) => <Button key={id} variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-[#2C2C2C]">
-                        {icon}
-                        {title}
-                    </Button>)}
+                    {sidebarButtons.map(({ id, icon, title, to }) =>
+                        <Button asChild key={id} variant="ghost" className="w-full justify-start text-gray-400 hover:text-white hover:bg-[#2C2C2C]">
+                            <Link to={to}>
+                                {icon}
+                                {title}
+                            </Link>
+                        </Button>)}
                 </nav>
             </aside>
-            <main className="flex-1 p-8 pt-10 lg:pt-20">
-                <h1 className="text-3xl font-bold mb-2 text-center">1:1 interview with instant feedback using AI</h1>
-                <p className="text-xl text-gray-400 mb-12 text-center">Choose your desired profile</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
-                    {interviewCards.map((item, index) => (
-                        <Link key={index} to={`/interview/${item.to}`} >
-                            <Card className="bg-[#2C2C2C] text-white border-0 p-6 flex flex-col items-center gap-4 hover:bg-[#3C3C3C] cursor-pointer transition-colors">
-                                {item.icon}
-                                <h2 className="font-medium text-center">{item.label}</h2>
-                            </Card>
-                        </Link>
-                    ))}
-                </div>
+            <main className="flex-1 p-8 pl-72 overflow-scroll" >
+                <Routes>
+                    <Route path='' element={<DashboardHome />} />
+                    <Route path='interview' element={<DashboardInterview />} />
+                    <Route path='history' element={<DashboardHistory />} />
+                    <Route path='/review/:reviewId' element={<ReviewPage />} />
+                </Routes>
             </main>
         </div>
     )

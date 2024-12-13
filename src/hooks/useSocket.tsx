@@ -2,6 +2,7 @@ import { Captions } from '@/interfaces/types';
 import { base64ToArrayBuffer } from '@/utils/audioUtils';
 // import { clearAudioQueue, playNextInQueue } from '@/utils/audioUtils';
 import { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface WebSocketHook {
     isJoined: boolean;
@@ -30,6 +31,8 @@ export const useWebSocket = (): WebSocketHook => {
     const isPlayingRef = useRef<boolean>(false);
     const audioQueueRef = useRef<string[]>([]);
     const currentAudioSourceRef = useRef<AudioBufferSourceNode | null>(null);
+
+    const navigate = useNavigate()
 
     // for sound wave
     const [audioContext] = useState(new (window.AudioContext || (window as any).webkitAudioContext)());
@@ -95,6 +98,7 @@ export const useWebSocket = (): WebSocketHook => {
 
                 socketRef.current = null;
                 console.log("client: disconnected from server");
+                navigate('/dashboard/review/123')
             };
         } catch (error) {
             console.error("Socket connection error:", error);
