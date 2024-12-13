@@ -93,7 +93,7 @@ export default function ReviewPage() {
                         </Card>
 
                         {/* Skill Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {skillCards.map((skill, index) => (
                                 <Card key={index} className="p-6 bg-[#2C2C2C] border-[#3D3D3D] text-white">
                                     <div className="space-y-4">

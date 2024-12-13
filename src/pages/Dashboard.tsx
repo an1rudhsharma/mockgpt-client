@@ -1,28 +1,31 @@
-import { Home, History, Users, NotebookText } from 'lucide-react'
+import { History, Users, NotebookText } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Link, Route, Routes } from 'react-router-dom'
 import DashboardHome from '@/components/dashboard/Home'
 import DashboardInterview from '@/components/dashboard/Interview'
 import DashboardHistory from '@/components/dashboard/History'
 import ReviewPage from '@/components/dashboard/ReviewPage'
+import Notfound from './Notfound'
 
-const sidebarButtons = [{
-    id: 1,
-    icon: <Home className="h-5 w-5 mr-3" />,
-    title: "Home",
-    to: '/dashboard'
-}, {
-    id: 2,
-    icon: <NotebookText className="h-5 w-5 mr-3" />,
-    title: "Give Interview",
-    to: '/dashboard/interview',
-},
-{
-    id: 3,
-    icon: <History className="h-5 w-5 mr-3" />,
-    title: "History",
-    to: '/dashboard/history',
-}]
+const sidebarButtons = [
+    //     {
+    //     id: 1,
+    //     icon: <Home className="h-5 w-5 mr-3" />,
+    //     title: "Home",
+    //     to: '/dashboard'
+    // }, 
+    {
+        id: 2,
+        icon: <NotebookText className="h-5 w-5 mr-3" />,
+        title: "Give Interview",
+        to: '/dashboard/interview',
+    },
+    {
+        id: 3,
+        icon: <History className="h-5 w-5 mr-3" />,
+        title: "History",
+        to: '/dashboard/history',
+    }]
 
 
 export default function Dashboard() {
@@ -51,6 +54,7 @@ export default function Dashboard() {
                     <Route path='interview' element={<DashboardInterview />} />
                     <Route path='history' element={<DashboardHistory />} />
                     <Route path='/review/:reviewId' element={<ReviewPage />} />
+                    <Route path='*' element={<Notfound dashboard={true} />} />
                 </Routes>
             </main>
         </div>
