@@ -1,7 +1,7 @@
 import { History, Users, NotebookText } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Link, Route, Routes } from 'react-router-dom'
-import DashboardHome from '@/components/dashboard/Home'
+// import DashboardHome from '@/components/dashboard/Home'
 import DashboardInterview from '@/components/dashboard/Interview'
 import DashboardHistory from '@/components/dashboard/History'
 import ReviewPage from '@/components/dashboard/ReviewPage'
@@ -50,7 +50,7 @@ export default function Dashboard() {
             </aside>
             <main className="flex-1 p-8 pl-72 overflow-scroll" >
                 <Routes>
-                    <Route path='' element={<DashboardHome />} />
+                    {/* <Route path='' element={<DashboardHome />} /> */}
                     <Route path='interview' element={<DashboardInterview />} />
                     <Route path='history' element={<DashboardHistory />} />
                     <Route path='/review/:reviewId' element={<ReviewPage />} />

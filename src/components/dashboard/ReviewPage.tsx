@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-// import { Separator } from "@/components/ui/separator"
 import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer, ShieldCheck, Download } from 'lucide-react'
 import { useState } from "react"
-// import { Input } from "../ui/input"
 
 interface SkillCard {
     type: string
@@ -135,12 +133,12 @@ export default function ReviewPage() {
                                             <p className="font-medium text-gray-200">This position is in-person, so you would come into the London office. Are you able to work in London?</p>
                                             <p className="text-gray-400">The candidate, Aaron, confirmed the ability to work in London, mentioning dual citizenship with the United States and the UK, indicating no legal barriers to employment in London.</p>
                                         </div>
-                                        {/* <Separator /> */}
+                                        <hr className="border-neutral-700" />
                                         <div className="space-y-2">
                                             <p className="font-medium text-gray-200">Python is an important technology for this role. Can you explain the differences between a tuple and a list in Python?</p>
                                             <p className="text-gray-400">Aaron understands that a tuple is immutable and a list is mutable, and provided an example of using a tuple as a dictionary key due to its immutability, which lists cannot be used for.</p>
                                         </div>
-                                        {/* <Separator /> */}
+                                        <hr className="border-neutral-700" />
                                         <div className="space-y-2">
                                             <p className="font-medium text-gray-200">Let's say you hypothesize that when the CEO of a public company resigns, the company's share price goes down. How would you go about testing your hypothesis?</p>
                                             <p className="text-gray-400">Aaron proposed collecting data on stock price changes post-CEO resignation, conducting a t-test to assess statistical significance, and ensuring data validity through methods like cross-referencing and regression analysis to control for other variables.</p>
@@ -171,7 +169,6 @@ export default function ReviewPage() {
                                             <div className="text-gray-400">[00:10] Candidate</div>
                                             <p>Hey, Alex. Nice to meet you. My name is Aaron. I studied computer science at Brown University. I'm really passionate about software engineering, and all things data science related. So really excited to to, again, get started here.</p>
                                         </div>
-                                        {/* Add more transcript items as needed */}
                                     </div>
                                 </div>
                             )}

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import { Captions } from "@/interfaces/types";
-import { Card } from "./ui/card";
-import { ScrollArea } from "./ui/scroll-area";
+import { Card } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
 import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
 import SoundWave from "./sound-wave";
+import TextEditorModal from "./TextEditor";
 
 
 // VideoCall View Props
@@ -40,7 +41,7 @@ export const VideoCallView: React.FC<VideoCallViewProps> = ({ socketRef, isMicro
                     </div>
                 </div>
 
-                <div className="p-3 flex gap-5 justify-center rounded-lg w-full max-w-[900px] bg-[#2C2C2C]">
+                <div className="relative p-3 flex gap-5 justify-center  rounded-lg w-full max-w-[900px] bg-[#2C2C2C]">
                     <VideoScreenButtons socketRef={socketRef} onCall={true} changeMicrophoneState={changeMicrophoneState} isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} isMicropohoneOn={isMicropohoneOn} setCameraLoading={setCameraLoading} />
                 </div>
 
@@ -236,7 +237,7 @@ export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({ socketRef, onC
             >
                 {isMicropohoneOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
             </Button>
-            {onCall &&
+            {onCall && <>
                 <Button
                     variant={"destructive"}
                     size="icon"
@@ -245,6 +246,9 @@ export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({ socketRef, onC
                 >
                     <PhoneOff />
                 </Button>
+
+                <TextEditorModal />
+            </>
             }
         </>
     )
