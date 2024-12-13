@@ -1,12 +1,92 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button"
-import { MoonIcon, Search, Users } from 'lucide-react'
+import { Card } from "@/components/ui/card";
+import { Check, MoonIcon, Search, Users } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
 
 export default function LandingPage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const faqs = [
+        {
+            question: "What is hellogenai?",
+            answer: "hellogenai is an AI-powered platform that helps companies conduct and evaluate technical interviews efficiently and objectively."
+        },
+        {
+            question: "How does hellogenai conduct interviews?",
+            answer: "Our platform uses advanced AI to conduct real-time video interviews, assess technical skills, and provide detailed feedback and scoring."
+        },
+        {
+            question: "How is candidate performance evaluated?",
+            answer: "We use a combination of AI analysis, technical assessment, and behavioral evaluation to provide comprehensive candidate scoring."
+        },
+        {
+            question: "Can hellogenai handle technical interviews?",
+            answer: "Yes, our platform is specifically designed to conduct technical interviews across various domains including software development, data science, and more."
+        },
+        {
+            question: "What kind of support can I expect?",
+            answer: "We offer email and phone support, with response times varying by plan tier. Enterprise customers receive priority support."
+        },
+        {
+            question: "How do I get started with hellogenai?",
+            answer: "Simply sign up for a free account, choose your plan, and start conducting interviews immediately."
+        },
+        {
+            question: "Can I get a demo of hellogenai?",
+            answer: "Yes, we offer free demos for enterprise customers. Contact our sales team to schedule a demonstration."
+        }
+    ];
+
+    const pricingPlans = [
+        {
+            name: "Tier-1",
+            description: "Pay as you go",
+            price: "₹495",
+            interval: "/per interview",
+            features: [
+                "No minimum volume commitment",
+                "Can carryover 25% of unused credits",
+                "Email support with-in 24hours"
+            ]
+        },
+        {
+            name: "Tier-2",
+            description: "Standard Starter Plan",
+            price: "₹396",
+            interval: "/per interview",
+            features: [
+                "Minimum of 100 interviews purchased per month",
+                "Can carryover 40% of unused credits to next month",
+                "Email support with-in 6 hours"
+            ]
+        },
+        {
+            name: "Tier-3",
+            description: "High volume plan",
+            price: "₹297",
+            interval: "/per interview",
+            features: [
+                "Minimum of 300 interviews purchased per month",
+                "Can carryover 50% of unused credits to next month",
+                "Email/call support with-in 2 hours"
+            ]
+        },
+        {
+            name: "Tire-4",
+            description: "Enterprise Plan",
+            price: "₹193",
+            interval: "/per interview",
+            features: [
+                "Minimum of 500 interviews purchased per month",
+                "Credits do not expire",
+                "Priority Email and Call support"
+            ]
+        }
+    ]
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-white relative">
+        <div className="min-h-screen bg-zinc-950 text-white relative pb-10">
             {/* Grid Background */}
             <div
                 className="absolute inset-0 bg-[linear-gradient(rgba(10,10,10,0.8),rgba(10,10,10,0.8))]"
@@ -27,7 +107,7 @@ export default function LandingPage() {
                                 <div className="bg-purple-600 p-1.5 rounded">
                                     <Users className="h-6 w-6 text-white" />
                                 </div>
-                                <span className="text-xl font-bold">Interview</span>
+                                <span className="text-xl font-bold">HelloGenAI</span>
                             </Link>
 
                             {/* Navigation Links */}
@@ -76,7 +156,7 @@ export default function LandingPage() {
                 </nav>
 
                 {/* Hero Section */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 text-center">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 text-center">
                     {/* New Badge */}
                     <div className="inline-flex items-center gap-2 bg-[#1C1C1C] rounded-full px-2 py-2 mb-8">
                         <span className="bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">
@@ -104,18 +184,188 @@ export default function LandingPage() {
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button
-                            className="bg-white text-black hover:bg-gray-200 text-lg px-8 py-6"
+                            variant="outline"
+                            className="hover:bg-gray-200 text-black text-lg px-8 py-6"
                             onClick={() => navigate('/signup')}
                         >
                             Start free trial →
                         </Button>
-                        <Button variant="outline" className="text-lg px-8 py-6 text-black">
+                        <Button
+                            variant={'default'}
+                            className="text-lg px-8 py-6 text-black bg-purple-600 hover:bg-purple-700">
                             Book a demo
                         </Button>
                     </div>
-                </div>
+                </section>
+
+                {/* Pricing Section */}
+                <section id="pricing" className="max-w-md xl:max-w-7xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl mx-auto py-6 md:py-12 lg:py-18 ">
+                    <div className=" px-4 sm:px-6 lg:px-8 ">
+                        <div className="text-center mb-12">
+                            <h2 className="text-4xl font-bold mb-4">Pricing</h2>
+                            <p className="text-gray-400">Choose the plan that's right for you</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+                            {pricingPlans.map((plan) => (
+                                <Card key={plan.name} className="bg-zinc-900 border-[#2D2D2D] p-6 text-white">
+                                    <div className="space-y-6 ">
+                                        <div>
+                                            <h3 className="text-xl font-bold">{plan.name}</h3>
+                                            <p className="text-gray-400 text-sm">{plan.description}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-4xl font-bold">{plan.price}</p>
+                                            <p className="text-gray-400">{plan.interval}</p>
+                                        </div>
+                                        <Button variant={'secondary'} className="w-full">
+                                            View
+                                        </Button>
+                                        <div className="space-y-4 pt-4 border-t border-[#2D2D2D]">
+                                            <p className="font-medium">PLAN DETAILS</p>
+                                            <ul className="space-y-3">
+                                                {plan.features.map((feature, index) => (
+                                                    <li key={index} className="flex items-start gap-3">
+                                                        <Check className="h-5 w-5 text-green-500 shrink-0" />
+                                                        <span className="text-sm text-gray-300">{feature}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQs Section */}
+                <section id="faqs" className="py-24">
+                    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-12">
+                            <span className="text-purple-500 text-sm font-medium">FAQS</span>
+                            <h2 className="text-4xl font-bold mt-2 mb-4">Common Questions</h2>
+                        </div>
+                        <Accordion type="single" collapsible className="w-full space-y-4">
+                            {faqs.map((faq, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    value={`item-${index}`}
+                                    className="bg-zinc-900 rounded-lg border border-[#2D2D2D] px-6"
+                                >
+                                    <AccordionTrigger className="text-left hover:no-underline">
+                                        {faq.question}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="text-gray-400">
+                                        {faq.answer}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
+                </section>
+
+                {/* Try Now Section */}
+                <section className="max-w-md xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl mx-auto rounded-xl mb-10 py-24 bg-zinc-900">
+                    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                        <div className="flex justify-center mb-6">
+                            <div className="bg-purple-600 p-1.5 rounded">
+                                <Users className="h-6 w-6 text-white" />
+                            </div>
+                        </div>
+                        <h2 className="text-4xl font-bold mb-8">Try InterviewGPT today</h2>
+                        <Button
+                            size="lg"
+                            className="bg-white text-black hover:bg-gray-200"
+                            onClick={() => navigate('/signup')}
+                        >
+                            Get started - It's free →
+                        </Button>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="max-w-md xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl mx-auto bg-zinc-900 border-t border-[#2D2D2D] pt-16 pb-8 rounded-2xl">
+                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                            {/* Brand Column */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-purple-600 p-1.5 rounded">
+                                        <Users className="h-6 w-6 text-white" />
+                                    </div>
+                                    <span className="text-xl font-bold">HelloGenAI</span>
+                                </div>
+                                <p className="text-gray-400 text-sm">Hire Smarter, Not Harder!</p>
+                            </div>
+
+                            {/* Explore Column */}
+                            <div>
+                                <h3 className="font-semibold mb-4">Explore</h3>
+                                <ul className="space-y-3">
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            For Job Seekers
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            For Recruiters
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Company Column */}
+                            <div>
+                                <h3 className="font-semibold mb-4">Company</h3>
+                                <ul className="space-y-3">
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            Contact Us
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            Careers
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            About Us
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Legal Column */}
+                            <div>
+                                <h3 className="font-semibold mb-4">Legal</h3>
+                                <ul className="space-y-3">
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            Privacy Policy
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
+                                            Terms and Conditions
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Copyright */}
+                        <div className="pt-8 border-t border-[#2D2D2D] text-center">
+                            <p className="text-gray-400 text-sm">
+                                © helloGenAI.in. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
     )
 }
+
 
