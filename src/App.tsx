@@ -4,6 +4,7 @@ import InterviewPage from './pages/InterviewScreen';
 import Home from './pages/Home';
 import LoginPage from './pages/Login';
 import SignUpPage from './pages/Signup';
+import Notfound from './pages/Notfound';
 const App = () => {
   return (
     <main>
@@ -14,6 +15,7 @@ const App = () => {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<SignUpPage />} />
           <Route path='/interview/:type' element={<InterviewPage />} />
+          <Route path='/*' element={<Notfound />} />
         </Routes>
       </Router>
     </main>
