@@ -9,7 +9,7 @@ const UserAPI = {
                 name,
                 email,
                 password
-            }
+            },
         });
         return response;
     },
@@ -20,7 +20,8 @@ const UserAPI = {
             data: {
                 email,
                 password
-            }
+            },
+            withCredentials: true
         });
         return response
     },
@@ -28,7 +29,9 @@ const UserAPI = {
         const response = await api.request({
             url: '/me',
             method: 'GET',
+            withCredentials: true
         });
+        console.log(response)
         return response
     },
 }

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios"
 
 const api = axios.create({
     withCredentials: true,
-    baseURL: process.env.VITE_BACKEND_URL
+    baseURL: import.meta.env.VITE_BACKEND_URL
 })
 
 const errorHandler = (error: AxiosError) => {
