@@ -1,12 +1,15 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
-import Dashboard from '@/pages/Dashboard';
 import Home from '@/pages/Home';
 import LoginPage from '@/pages/Login';
 import SignUpPage from '@/pages/Signup';
-import InterviewPage from '@/pages/InterviewScreen';
 import Notfound from '@/pages/Notfound';
 import Public from './public';
 import Protected from './protected';
+import React, { Suspense } from 'react';
+import { LoadingSpinner } from '@/components/loader';
+
+const Dashboard = React.lazy(() => import("@/pages/Dashboard"));
+const InterviewPage = React.lazy(() => import('@/pages/InterviewScreen'));
 
 const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/'>
@@ -16,8 +19,8 @@ const router = createBrowserRouter(createRoutesFromElements(
             <Route path='/signup' element={<SignUpPage />} />
         </Route>
         <Route element={<Protected />}>
-            <Route path='/dashboard/*' element={<Dashboard />} />
-            <Route path='/interview/:type' element={<InterviewPage />} />
+            <Route path='dashboard/*' element={<Suspense fallback={<LoadingSpinner />}><Dashboard /></Suspense>} />
+            <Route path='/interview/:type' element={<Suspense fallback={<LoadingSpinner />}><InterviewPage /></Suspense>} />
         </Route>
         <Route path='/*' element={<Notfound />} />
     </Route>

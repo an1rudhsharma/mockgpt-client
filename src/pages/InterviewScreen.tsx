@@ -1,10 +1,13 @@
 import { Users } from 'lucide-react'
-import { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useWebSocket } from '@/hooks/useSocket'
 import { useMicrophone } from '@/hooks/useMicrophone'
-import { JoinCall, UserVideoScreen, VideoCallView, VideoScreenButtons } from '@/components/interview/InterviewScreenComps'
+import { JoinCall, UserVideoScreen, VideoScreenButtons } from '@/components/interview/InterviewScreenComps'
 import useVideoScreen from '@/hooks/useVideoCamera'
+import { LoadingSpinner } from '@/components/loader'
+
+const VideoCallView = React.lazy(() => import("@/components/interview/InterviewScreenComps").then((module) => ({ default: module.VideoCallView })))
 
 export default function InterviewPage() {
     const { type } = useParams();
@@ -53,17 +56,19 @@ export default function InterviewPage() {
                         </div>
                         :
 
-                        <VideoCallView
-                            socketRef={socketRef}
-                            isMicropohoneOn={isMicropohoneOn}
-                            changeMicrophoneState={changeMicrophoneState}
-                            isCameraOn={isCameraOn}
-                            cameraLoading={cameraLoading}
-                            setCameraLoading={setCameraLoading}
-                            setIsCameraOn={setIsCameraOn}
-                            captions={captions}
-                            analyser={analyser}
-                        />
+                        <Suspense fallback={<LoadingSpinner />}>
+                            <VideoCallView
+                                socketRef={socketRef}
+                                isMicropohoneOn={isMicropohoneOn}
+                                changeMicrophoneState={changeMicrophoneState}
+                                isCameraOn={isCameraOn}
+                                cameraLoading={cameraLoading}
+                                setCameraLoading={setCameraLoading}
+                                setIsCameraOn={setIsCameraOn}
+                                captions={captions}
+                                analyser={analyser}
+                            /></Suspense>
+
                 )
                     : (
                         <div className='flex h-full items-center justify-center text-5xl'>
