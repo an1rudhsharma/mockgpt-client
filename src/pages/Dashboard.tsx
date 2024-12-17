@@ -53,7 +53,7 @@ export default function Dashboard() {
                     {/* <Route path='' element={<DashboardHome />} /> */}
                     <Route path='' element={<DashboardInterview />} />
                     <Route path='history' element={<DashboardHistory />} />
-                    <Route path='/review/:reviewId' element={<ReviewPage />} />
+                    <Route path='/review/:interviewId' element={<ReviewPage />} />
                     <Route path='*' element={<Notfound dashboard={true} />} />
                 </Routes>
             </main>

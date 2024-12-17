@@ -15,8 +15,8 @@ const AuthLayout = () => (WrappedComponent: React.FC) => {
           </Link>
           <div className="flex-1 flex items-center justify-center gap-2">
             <img src={icon} alt="icon" className="w-24 h-24" />
-            <h1 className="text-4xl font-bold text-white">
-              Automate hiring with<br />AI in few minutes
+            <h1 className="text-4xl font-bold text-white max-w-sm">
+              Automate hiring with AI in few minutes
             </h1>
           </div>
         </div>

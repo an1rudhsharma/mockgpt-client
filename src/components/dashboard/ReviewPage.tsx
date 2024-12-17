@@ -1,47 +1,98 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import useFetchReview from "@/hooks/useFetchReview"
 import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer, ShieldCheck, Download } from 'lucide-react'
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { LoadingSpinner } from "../loader"
 
-interface SkillCard {
-    type: string
-    category: string
-    score: number
-    feedback: string
+// interface SkillCard {
+//     type: string
+//     category: string
+//     score: number
+//     feedback: string
+// }
+
+// const skillCards: SkillCard[] = [
+//     {
+//         type: "Technical Skill",
+//         category: "Python",
+//         score: 75,
+//         feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
+//     },
+//     {
+//         type: "Technical Skill",
+//         category: "DSA",
+//         score: 80,
+//         feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
+//     },
+//     {
+//         type: "Soft Skill",
+//         category: "Communication",
+//         score: 70,
+//         feedback: "Aaron communicated his points clearly when discussing technical topics and was able to articulate his thought process during the problem-solving question. However, his attempt to deflect a question with humor ('Could you tell me and then give me a one hundred on the interview?') was inappropriate for an interview setting and detracted from his overall communication score. Additionally, he could have asked more clarifying questions or engaged in a more in-depth discussion on the technical topics."
+//     },
+//     {
+//         type: "Technical Skill",
+//         category: "Problem Solving",
+//         score: 85,
+//         feedback: "Aaron showed a good approach to problem-solving by outlining a method to test a hypothesis involving stock prices and CEO resignations. He mentioned collecting relevant data, conducting a t-test, and setting up a null and alternate hypothesis. His approach to ensuring the validity of the results, including checking the p-value, ensuring data cleanliness, cross-referencing data sources, and running regression analysis, indicates a strong understanding of statistical analysis and problem-solving skills."
+//     }
+// ]
+
+interface Review {
+    "overall": {
+        "feedback": string,
+        "score": number
+    },
+    "question_summary": {
+        "question1": string,
+        "answer1": string,
+        "question2": string,
+        "answer2": string
+    },
+    "skills": {
+        "problem_solving": {
+            "score": number,
+            "details": string
+        },
+        "communication": {
+            "score": number,
+            "details": string
+        }
+    }
 }
 
 export default function ReviewPage() {
+    const interviewId = useParams().interviewId as string;
+    const [reviewDetails, setReviewDetails] = useState<Review | null>(null);
+    const [, setInterviewTranscript] = useState<string | null>(null);
+    const { loading, getReview } = useFetchReview();
+
     const [isQuestionSummaryOpen, setIsQuestionSummaryOpen] = useState(false)
     const [isTranscriptOpen, setIsTranscriptOpen] = useState(false)
     const [isVideoOpen, setIsVideoOpen] = useState(false)
 
-    const skillCards: SkillCard[] = [
-        {
-            type: "Technical Skill",
-            category: "Python",
-            score: 75,
-            feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
-        },
-        {
-            type: "Technical Skill",
-            category: "DSA",
-            score: 80,
-            feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
-        },
-        {
-            type: "Soft Skill",
-            category: "Communication",
-            score: 70,
-            feedback: "Aaron communicated his points clearly when discussing technical topics and was able to articulate his thought process during the problem-solving question. However, his attempt to deflect a question with humor ('Could you tell me and then give me a one hundred on the interview?') was inappropriate for an interview setting and detracted from his overall communication score. Additionally, he could have asked more clarifying questions or engaged in a more in-depth discussion on the technical topics."
-        },
-        {
-            type: "Technical Skill",
-            category: "Problem Solving",
-            score: 85,
-            feedback: "Aaron showed a good approach to problem-solving by outlining a method to test a hypothesis involving stock prices and CEO resignations. He mentioned collecting relevant data, conducting a t-test, and setting up a null and alternate hypothesis. His approach to ensuring the validity of the results, including checking the p-value, ensuring data cleanliness, cross-referencing data sources, and running regression analysis, indicates a strong understanding of statistical analysis and problem-solving skills."
-        }
-    ]
+    useEffect(() => {
+        getReview(interviewId).then((data) => {
+            if (data.callOutcome !== "") {
+                let index1 = data.callOutcome.indexOf('{')
+                let index2 = data.callOutcome.lastIndexOf('}')
+
+                setReviewDetails(JSON.parse(data.callOutcome.slice(index1, index2 + 1)));
+            }
+            setInterviewTranscript(data.conversationTranscript);
+        })
+    }, [])
+
+    if (loading) {
+        return <div className="bg-red-400"><LoadingSpinner /></div>
+    }
+
+    if (reviewDetails == null) {
+        return <div>No Details for this interview</div>
+    }
 
     return (
         <div className="min-h-screen w-full text-white">
@@ -72,11 +123,11 @@ export default function ReviewPage() {
                                 <h2 className="text-lg font-medium mb-4">Overall Hire Score</h2>
                                 <div className="relative w-32 h-32 mx-auto mb-4">
                                     <Progress
-                                        value={77}
+                                        value={reviewDetails.overall.score}
                                         className="h-32 w-32"
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-4xl font-bold">77</span>
+                                        <span className="text-4xl font-bold">{reviewDetails.overall.score}</span>
                                     </div>
                                 </div>
                             </Card>
@@ -86,35 +137,42 @@ export default function ReviewPage() {
                         <Card className="p-6 bg-[#2C2C2C] border-[#3D3D3D] text-white">
                             <h2 className="text-lg font-medium mb-4">Overall Feedback</h2>
                             <p className="text-gray-200">
-                                Overall, Aaron has shown a decent grasp of Python and strong problem-solving abilities. His communication skills are generally clear, but there is room for improvement in professional conduct and depth of discussion. His technical knowledge and problem-solving approach are promising, but he should work on providing more detailed explanations and maintaining a professional demeanor throughout the interview process.
+                                {reviewDetails.overall.feedback}
                             </p>
                         </Card>
 
                         {/* Skill Cards */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {skillCards.map((skill, index) => (
-                                <Card key={index} className="p-6 bg-[#2C2C2C] border-[#3D3D3D] text-white">
+                            {/* {reviewDetails.skills && Object.entries(reviewDetails.skills).map((skill, index) => { */}
+                            {reviewDetails.skills && Object.entries(reviewDetails.skills).map(([skill, detail], index) => {
+
+                                // Converting Snake case to Normal 
+                                skill = skill.replace("_", ' ')
+                                skill = skill[0].toUpperCase() + skill.slice(1);
+
+                                return (<Card key={index} className="p-6 bg-[#2C2C2C] border-[#3D3D3D] text-white">
                                     <div className="space-y-4">
-                                        <div className="text-sm text-gray-400">{skill.type}</div>
+                                        {/* <div className="text-sm text-gray-400">{skill}</div> */}
                                         <div className="flex justify-between items-center">
-                                            <h3 className="text-3xl font-medium ">{skill.category}</h3>
+                                            <h3 className="text-3xl font-medium ">{skill}</h3>
                                             <div className="relative w-16 h-16">
                                                 <Progress
-                                                    value={skill.score}
+                                                    value={detail.score}
                                                     className="h-16 w-16 [&>div]:stroke-purple-600 [&>div]:stroke-[8]"
                                                 />
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-xl font-bold">{skill.score}</span>
+                                                    <span className="text-xl font-bold">{detail.score}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
                                             <div className="text-sm font-medium mb-2 text-gray-300">Feedback</div>
-                                            <p className="text-sm text-gray-400">{skill.feedback}</p>
+                                            <p className="text-sm text-gray-400">{detail.details}</p>
                                         </div>
                                     </div>
                                 </Card>
-                            ))}
+                                )
+                            })}
                         </div>
 
                         {/* Question Summary */}
@@ -130,18 +188,13 @@ export default function ReviewPage() {
                                 <div className="p-6 pt-0">
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <p className="font-medium text-gray-200">This position is in-person, so you would come into the London office. Are you able to work in London?</p>
-                                            <p className="text-gray-400">The candidate, Aaron, confirmed the ability to work in London, mentioning dual citizenship with the United States and the UK, indicating no legal barriers to employment in London.</p>
+                                            <p className="font-medium text-gray-200">{reviewDetails.question_summary.question1}</p>
+                                            <p className="text-gray-400">{reviewDetails.question_summary.answer1}</p>
                                         </div>
                                         <hr className="border-neutral-700" />
                                         <div className="space-y-2">
-                                            <p className="font-medium text-gray-200">Python is an important technology for this role. Can you explain the differences between a tuple and a list in Python?</p>
-                                            <p className="text-gray-400">Aaron understands that a tuple is immutable and a list is mutable, and provided an example of using a tuple as a dictionary key due to its immutability, which lists cannot be used for.</p>
-                                        </div>
-                                        <hr className="border-neutral-700" />
-                                        <div className="space-y-2">
-                                            <p className="font-medium text-gray-200">Let's say you hypothesize that when the CEO of a public company resigns, the company's share price goes down. How would you go about testing your hypothesis?</p>
-                                            <p className="text-gray-400">Aaron proposed collecting data on stock price changes post-CEO resignation, conducting a t-test to assess statistical significance, and ensuring data validity through methods like cross-referencing and regression analysis to control for other variables.</p>
+                                            <p className="font-medium text-gray-200">{reviewDetails.question_summary.question2}</p>
+                                            <p className="text-gray-400">{reviewDetails.question_summary.answer2}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -31,7 +31,6 @@ const UserAPI = {
             method: 'GET',
             withCredentials: true
         });
-        console.log(response)
         return response
     },
 }

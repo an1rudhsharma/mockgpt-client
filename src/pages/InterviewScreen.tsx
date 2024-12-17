@@ -74,8 +74,8 @@ export default function InterviewPage() {
 
                 )
                     : (
-                        <div className='flex h-full items-center justify-center text-5xl'>
-                            Loading...
+                        <div className='flex h-full justify-center items-center'>
+                            <LoadingSpinner className='h-20 w-20  m-auto' />
                         </div>
                     )}
             </div>

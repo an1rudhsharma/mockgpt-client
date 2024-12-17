@@ -1,6 +1,5 @@
 import { Captions, InterviewSubject } from '@/interfaces/types';
 import { base64ToArrayBuffer } from '@/utils/audioUtils';
-// import { clearAudioQueue, playNextInQueue } from '@/utils/audioUtils';
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,10 +12,7 @@ interface WebSocketHook {
     analyser: AnalyserNode | null
 }
 
-const messages: Captions[] = [
-
-]
-
+const messages: Captions[] = [];
 
 export const useWebSocket = (): WebSocketHook => {
     const [isJoined, setIsJoined] = useState<boolean>(false);
@@ -26,6 +22,8 @@ export const useWebSocket = (): WebSocketHook => {
     const isPlayingRef = useRef<boolean>(false);
     const audioQueueRef = useRef<string[]>([]);
     const currentAudioSourceRef = useRef<AudioBufferSourceNode | null>(null);
+
+    const interviewId = useRef<string | null>(null)
 
     const navigate = useNavigate()
 
@@ -53,6 +51,10 @@ export const useWebSocket = (): WebSocketHook => {
                     if (data === 'deepgram is active') {
                         setIsJoined(true);
                         setLoading(false);
+                    }
+
+                    if (data.event === 'interviewId') {
+                        interviewId.current = data.payload
                     }
 
                     if (data?.event === 'playAudio') {
@@ -83,7 +85,7 @@ export const useWebSocket = (): WebSocketHook => {
                 }
             });
 
-            socket.onclose = () => {
+            socket.onclose = async () => {
                 setIsJoined(false);
                 setCaptions([]);
                 isPlayingRef.current = false;
@@ -93,7 +95,11 @@ export const useWebSocket = (): WebSocketHook => {
 
                 socketRef.current = null;
                 console.log("client: disconnected from server");
-                navigate('/dashboard/review/123')
+
+                setLoading(true)
+                await new Promise((resolve) => setTimeout(resolve, 5000))
+                setLoading(false)
+                navigate(`/dashboard/review/${interviewId.current}`)
             };
         } catch (error) {
             console.error("Socket connection error:", error);

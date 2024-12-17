@@ -19,8 +19,8 @@ const router = createBrowserRouter(createRoutesFromElements(
             <Route path='/signup' element={<SignUpPage />} />
         </Route>
         <Route element={<Protected />}>
-            <Route path='dashboard/*' element={<Suspense fallback={<LoadingSpinner />}><Dashboard /></Suspense>} />
-            <Route path='/interview/:type' element={<Suspense fallback={<LoadingSpinner />}><InterviewPage /></Suspense>} />
+            <Route path='dashboard/*' element={<Suspense fallback={<div className='h-screen flex justify-center items-center'><LoadingSpinner className='w-20 h-20' /></div>}><Dashboard /></Suspense>} />
+            <Route path='/interview/:type' element={<Suspense fallback={<div className='h-screen flex justify-center items-center'><LoadingSpinner className='w-20 h-20' /></div>}><InterviewPage /></Suspense>} />
         </Route>
         <Route path='/*' element={<Notfound />} />
     </Route>

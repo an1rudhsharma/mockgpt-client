@@ -1,8 +1,6 @@
 import { User } from "@/interfaces/types";
 import { createContext, useContext, useState } from "react";
 
-
-
 interface AuthContextType {
     user: User | null,
     login: (userData: User) => void,
@@ -16,7 +14,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = (userData: User) => {
         setUser(userData);
-        console.log(userData)
     };
 
     const logout = () => {
@@ -30,15 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         </AuthContext.Provider>
     )
 }
-
-// export const useAuthContext = (): AuthContextType => {
-//     const context = useContext(AuthContext);
-//     if (context == null) {
-//         throw new Error('User must be logged In')
-//     }
-//     return context
-// }
-
 
 export const useAuthContext = (): AuthContextType => {
     const context = useContext(AuthContext)
