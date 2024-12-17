@@ -1,4 +1,4 @@
-import { Captions } from '@/interfaces/types';
+import { Captions, InterviewSubject } from '@/interfaces/types';
 import { base64ToArrayBuffer } from '@/utils/audioUtils';
 // import { clearAudioQueue, playNextInQueue } from '@/utils/audioUtils';
 import { useState, useRef, useCallback } from 'react';
@@ -9,17 +9,12 @@ interface WebSocketHook {
     loading: boolean;
     socketRef: React.MutableRefObject<WebSocket | null>;
     captions: Captions[];
-    makeSocketConnection: () => void;
+    makeSocketConnection: (interviewSubject: InterviewSubject) => void;
     analyser: AnalyserNode | null
 }
 
 const messages: Captions[] = [
-    {
-        id: 1,
-        sender: "Alex",
-        text: "Hello Abhay, How was your day? Let's start with your backend interview. ",
-        timestamp: new Date()
-    },
+
 ]
 
 
@@ -38,10 +33,10 @@ export const useWebSocket = (): WebSocketHook => {
     const [audioContext] = useState(new (window.AudioContext || (window as any).webkitAudioContext)());
     const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
 
-    const makeSocketConnection = useCallback(() => {
+    const makeSocketConnection = useCallback((interviewSubject: InterviewSubject) => {
         try {
             setLoading(true);
-            const socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+            const socket = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_URL}/${interviewSubject}`);
             const transcript: string[] = [];
 
             socket.onopen = () => {

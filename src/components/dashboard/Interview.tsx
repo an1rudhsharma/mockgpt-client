@@ -2,12 +2,12 @@ import { Database, LayoutDashboard, LineChart, FileSpreadsheet, Pi, FileJson } f
 import { Link } from 'react-router-dom'
 import { Card } from '../ui/card'
 const interviewCards = [
-    { icon: <Pi className="h-24 w-24" />, label: "DSA", to: 'dsa-interview' },
     { icon: <LayoutDashboard className="h-24 w-24" />, label: "Frontend", to: 'frontend-development-interview' },
     { icon: <FileJson className="h-24 w-24" />, label: "Backend", to: 'backend-development-interview' },
-    { icon: <Database className="h-24 w-24" />, label: "System Design ", to: 'system-design-interview' },
-    { icon: <LineChart className="h-24 w-24" />, label: "Data Science", to: 'datra-science-interview' },
-    { icon: <FileSpreadsheet className="h-24 w-24" />, label: "Analytics", to: 'data-analytics-interview' },
+    { icon: <Pi className="h-24 w-24" />, label: "Product", to: 'product-interview' },
+    { icon: <LineChart className="h-24 w-24" />, label: "Data Science", to: 'dataScience-interview' },
+    { icon: <FileSpreadsheet className="h-24 w-24" />, label: "Analytics", to: 'analytics-interview' },
+    { icon: <Database className="h-24 w-24" />, label: "System Design ", to: 'backend-development-interview' },
 ]
 
 const DashboardInterview = () => {

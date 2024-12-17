@@ -5,3 +5,5 @@ export interface User {
     email: string,
     password: string
 }
+
+export type InterviewSubject = 'backend' | 'frontend' | 'analytics' | 'data-science' | 'product' 

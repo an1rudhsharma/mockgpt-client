@@ -18,7 +18,7 @@ const sidebarButtons = [
         id: 2,
         icon: <NotebookText className="h-5 w-5 mr-3" />,
         title: "Give Interview",
-        to: '/dashboard/interview',
+        to: '/dashboard',
     },
     {
         id: 3,
@@ -51,7 +51,7 @@ export default function Dashboard() {
             <main className="flex-1 p-8 pl-72 overflow-scroll" >
                 <Routes>
                     {/* <Route path='' element={<DashboardHome />} /> */}
-                    <Route path='interview' element={<DashboardInterview />} />
+                    <Route path='' element={<DashboardInterview />} />
                     <Route path='history' element={<DashboardHistory />} />
                     <Route path='/review/:reviewId' element={<ReviewPage />} />
                     <Route path='*' element={<Notfound dashboard={true} />} />

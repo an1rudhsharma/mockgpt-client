@@ -1,15 +1,17 @@
 import { Users } from 'lucide-react'
-import React, { Suspense, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { Suspense } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useWebSocket } from '@/hooks/useSocket'
 import { useMicrophone } from '@/hooks/useMicrophone'
 import { JoinCall, UserVideoScreen, VideoScreenButtons } from '@/components/interview/InterviewScreenComps'
 import useVideoScreen from '@/hooks/useVideoCamera'
 import { LoadingSpinner } from '@/components/loader'
+import { InterviewSubject } from '@/interfaces/types'
 
 const VideoCallView = React.lazy(() => import("@/components/interview/InterviewScreenComps").then((module) => ({ default: module.VideoCallView })))
 
 export default function InterviewPage() {
+    const navigate = useNavigate()
     const { type } = useParams();
     const {
         isJoined,
@@ -24,9 +26,10 @@ export default function InterviewPage() {
 
     const { cameraLoading, isCameraOn, setCameraLoading, setIsCameraOn } = useVideoScreen()
 
-    useEffect(() => {
-        console.log('Interview type:', type);
-    }, [type]);
+    if (!type) {
+        navigate('/dashboard')
+        return
+    }
 
     return (
         <div className="h-screen bg-[#1C1C1C] text-white p-6">
@@ -49,7 +52,7 @@ export default function InterviewPage() {
 
                             <div className="w-full max-w-xs flex flex-col items-center justify-center ">
                                 <JoinCall
-                                    onClick={makeSocketConnection}
+                                    onClick={() => makeSocketConnection(type?.split('-')[0] as InterviewSubject)}
                                     loading={loading}
                                 />
                             </div>

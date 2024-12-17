@@ -15,15 +15,14 @@ function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        let success;
-
-        success = await handleLogin(email, password)
+        let success = await handleLogin(email, password)
 
         if (success) {
             setEmail("")
             setPassword("")
         }
     }
+
     return (
         <div className="space-y-6">
             <div className="space-y-2">
