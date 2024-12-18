@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import AuthLayout from "@/layout/AuthLayout"
 import { Input } from "@/components/ui/input"
@@ -53,9 +53,6 @@ function SignUpPage() {
 
 export default AuthLayout()(SignUpPage);
 
-
-
-
 function SignupForm({ setSignup }: { setSignup: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -105,6 +102,10 @@ function SignupForm({ setSignup }: { setSignup: React.Dispatch<React.SetStateAct
             setFormError(error || "Something went wrong. Please try again.");
         }
     };
+
+    useEffect(() => {
+        setFormError(error)
+    }, [error])
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>

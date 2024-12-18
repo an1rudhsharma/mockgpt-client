@@ -6,63 +6,7 @@ import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer, ShieldC
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { LoadingSpinner } from "../loader"
-
-// interface SkillCard {
-//     type: string
-//     category: string
-//     score: number
-//     feedback: string
-// }
-
-// const skillCards: SkillCard[] = [
-//     {
-//         type: "Technical Skill",
-//         category: "Python",
-//         score: 75,
-//         feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
-//     },
-//     {
-//         type: "Technical Skill",
-//         category: "DSA",
-//         score: 80,
-//         feedback: "Aaron demonstrated a basic understanding of Python data structures by correctly identifying the mutability of lists and the immutability of tuples. He also correctly mentioned that tuples can be used as dictionary keys while lists cannot. However, his explanation lacked depth, as he did not elaborate on the concept of immutability or provide additional details about the characteristics and use cases of tuples and lists."
-//     },
-//     {
-//         type: "Soft Skill",
-//         category: "Communication",
-//         score: 70,
-//         feedback: "Aaron communicated his points clearly when discussing technical topics and was able to articulate his thought process during the problem-solving question. However, his attempt to deflect a question with humor ('Could you tell me and then give me a one hundred on the interview?') was inappropriate for an interview setting and detracted from his overall communication score. Additionally, he could have asked more clarifying questions or engaged in a more in-depth discussion on the technical topics."
-//     },
-//     {
-//         type: "Technical Skill",
-//         category: "Problem Solving",
-//         score: 85,
-//         feedback: "Aaron showed a good approach to problem-solving by outlining a method to test a hypothesis involving stock prices and CEO resignations. He mentioned collecting relevant data, conducting a t-test, and setting up a null and alternate hypothesis. His approach to ensuring the validity of the results, including checking the p-value, ensuring data cleanliness, cross-referencing data sources, and running regression analysis, indicates a strong understanding of statistical analysis and problem-solving skills."
-//     }
-// ]
-
-interface Review {
-    "overall": {
-        "feedback": string,
-        "score": number
-    },
-    "question_summary": {
-        "question1": string,
-        "answer1": string,
-        "question2": string,
-        "answer2": string
-    },
-    "skills": {
-        "problem_solving": {
-            "score": number,
-            "details": string
-        },
-        "communication": {
-            "score": number,
-            "details": string
-        }
-    }
-}
+import { Review } from "@/interfaces/types"
 
 export default function ReviewPage() {
     const interviewId = useParams().interviewId as string;
