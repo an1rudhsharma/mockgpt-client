@@ -5,7 +5,6 @@ import useFetchReview from "@/hooks/useFetchReview"
 import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer, ShieldCheck, Download } from 'lucide-react'
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { LoadingSpinner } from "../loader"
 import { Review } from "@/interfaces/types"
 
 export default function ReviewPage() {
@@ -31,7 +30,7 @@ export default function ReviewPage() {
     }, [])
 
     if (loading) {
-        return <div className="bg-red-400"><LoadingSpinner /></div>
+        return <div>Loading....</div>
     }
 
     if (reviewDetails == null) {
