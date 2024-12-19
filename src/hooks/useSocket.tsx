@@ -97,7 +97,7 @@ export const useWebSocket = (): WebSocketHook => {
                 console.log("client: disconnected from server");
 
                 setLoading(true)
-                await new Promise((resolve) => setTimeout(resolve, 5000))
+                await new Promise((resolve) => setTimeout(resolve, 8000))
                 setLoading(false)
                 navigate(`/dashboard/review/${interviewId.current}`)
             };
