@@ -158,12 +158,12 @@ export default function LandingPage() {
 
                             {/* Navigation Links */}
                             <div className="hidden md:flex items-center gap-8">
-                                {/* <Link to="#" className="text-gray-300 hover:text-white">
+                                <Link to="/dashboard" className="text-gray-300 hover:text-white">
                                     Explore Interviews
-                                </Link> */}
-                                {/* <Link to="#" className="text-gray-300 hover:text-white">
+                                </Link>
+                                <Link to="/dashboard" className="text-gray-300 hover:text-white">
                                     Mock Interviews
-                                </Link> */}
+                                </Link>
                                 {/* <Link to="#" className="text-gray-300 hover:text-white">
                                     For Job seekers
                                 </Link> */}
@@ -234,7 +234,7 @@ export default function LandingPage() {
                             className="hover:bg-gray-200 text-black text-lg px-8 py-6"
                             onClick={() => navigate('/signup')}
                         >
-                            Start free trial →
+                            Try Now →
                         </Button>
                         <Button
                             variant={'default'}
