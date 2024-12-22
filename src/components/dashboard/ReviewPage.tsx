@@ -19,7 +19,7 @@ export default function ReviewPage() {
 
     useEffect(() => {
         getReview(interviewId).then((data) => {
-            if (data.callOutcome !== "") {
+            if (data?.callOutcome) {
                 let index1 = data.callOutcome.indexOf('{')
                 let index2 = data.callOutcome.lastIndexOf('}')
 
