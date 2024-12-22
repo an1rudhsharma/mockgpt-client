@@ -36,7 +36,7 @@ export default function Dashboard() {
                     <div className="bg-purple-600 p-1.5 rounded">
                         <Users className="h-6 w-6 text-white" />
                     </div>
-                    <span className="text-xl font-bold">Interview</span>
+                    <span className="text-xl font-bold">HelloGenAI</span>
                 </Link>
                 <nav className="space-y-2">
                     {sidebarButtons.map(({ id, icon, title, to }) =>

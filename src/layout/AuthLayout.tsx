@@ -11,7 +11,7 @@ const AuthLayout = () => (WrappedComponent: React.FC) => {
             <div className="bg-purple-600 p-1.5 rounded">
               <Users className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">Interview</span>
+            <span className="text-xl font-bold text-white">HelloGenAI</span>
           </Link>
           <div className="flex-1 flex items-center justify-center gap-2">
             <img src={icon} alt="icon" className="w-24 h-24" />

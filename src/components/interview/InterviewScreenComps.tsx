@@ -189,11 +189,14 @@ const SecondJoineeScreen: React.FC<{ isUserFullScreen: boolean, analyser: Analys
             <div className="absolute top-1/2 left-0 w-full h-full transform -translate-y-1/2">
                 <SoundWave analyser={analyser} isUserFullScreen={isUserFullScreen} />
             </div>
-            <div className={`${!isUserFullScreen ? 'text-2xl font-semibold top-5 left-5 ' : 'hidden'} absolute z-10`}> Rishabh</div>
-            <Avatar className={`${isUserFullScreen ? "w-12 h-12" : "w-32 h-32"}`}>
+            <div className={`${!isUserFullScreen ? 'text-2xl font-semibold top-5 left-5 ' : 'hidden'} flex items-center gap-2 absolute z-10`}>
+            <Avatar className={`${isUserFullScreen ? "w-12 h-12" : "w-10 h-10"}`}>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>R</AvatarFallback>
             </Avatar>
+                 <p>Rishabh</p>
+            </div>
+           
 
         </div>
     )
