@@ -33,7 +33,33 @@ const useFetchReview = () => {
         }
     }
 
-    return { getReview, loading, error }
+    const getAllReviews = async (userId:string)=>{
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await InterviewAPI.getReviewsByUserId(userId)
+            if (response.status == 200) {
+                return response.data
+            } else {
+                throw new Error('Something went wrong')
+            }
+        } catch (err: unknown) {
+            let error;
+            if (err instanceof AxiosError) {
+                error = err.response?.data?.message
+            } else {
+                error = "Failed to get Reviews";
+            }  // toast({
+                //     description: error,
+                //     variant: 'destructive',
+                // })
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+    }
+
+    return { getReview,getAllReviews, loading, error }
 }
 
 export default useFetchReview

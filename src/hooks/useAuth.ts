@@ -1,6 +1,5 @@
 import UserAPI from "@/api/UserAPI";
 import { useAuthContext } from "@/context/AuthContext";
-import { User } from "@/interfaces/types";
 import { AxiosError } from "axios";
 import { useState } from "react"
 
@@ -34,7 +33,7 @@ const useAuth = () => {
             setLoading(false);
         }
     }
-    const handleRegister = async ({ name, email, password }: User) => {
+    const handleRegister = async ({ name, email, password }: {name:string,email:string,password:string}) => {
         setLoading(true);
         setError(null);
         try {

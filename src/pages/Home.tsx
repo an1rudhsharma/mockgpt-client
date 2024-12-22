@@ -4,10 +4,8 @@ import { faqs, footerLinks, navigationLinks } from "@/data/data";
 import {  Users } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
 
-
 export default function LandingPage() {
     const navigate = useNavigate();
-
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white relative pb-10">
@@ -36,8 +34,8 @@ export default function LandingPage() {
 
                             {/* Navigation Links */}
                             <div className="hidden md:flex items-center gap-8">
-                                {navigationLinks.map((item)=>
-                                <Link to={item.link} className="text-gray-300 hover:text-white">
+                                {navigationLinks.map((item,index)=>
+                                <Link to={item.link} key={index} className="text-gray-300 hover:text-white">
                                     {item.title}
                                 </Link>
                              )}
