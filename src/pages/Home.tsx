@@ -1,89 +1,13 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card";
-import { Check, MoonIcon, Search, Users } from 'lucide-react'
+import { faqs, footerLinks, navigationLinks } from "@/data/data";
+import {  Users } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
+
 
 export default function LandingPage() {
     const navigate = useNavigate();
 
-    const faqs = [
-        {
-            question: "What is hellogenai?",
-            answer: "hellogenai is an AI-powered platform that helps companies conduct and evaluate technical interviews efficiently and objectively."
-        },
-        {
-            question: "How does hellogenai conduct interviews?",
-            answer: "Our platform uses advanced AI to conduct real-time video interviews, assess technical skills, and provide detailed feedback and scoring."
-        },
-        {
-            question: "How is candidate performance evaluated?",
-            answer: "We use a combination of AI analysis, technical assessment, and behavioral evaluation to provide comprehensive candidate scoring."
-        },
-        {
-            question: "Can hellogenai handle technical interviews?",
-            answer: "Yes, our platform is specifically designed to conduct technical interviews across various domains including software development, data science, and more."
-        },
-        {
-            question: "What kind of support can I expect?",
-            answer: "We offer email and phone support, with response times varying by plan tier. Enterprise customers receive priority support."
-        },
-        {
-            question: "How do I get started with hellogenai?",
-            answer: "Simply sign up for a free account, choose your plan, and start conducting interviews immediately."
-        },
-        {
-            question: "Can I get a demo of hellogenai?",
-            answer: "Yes, we offer free demos for enterprise customers. Contact our sales team to schedule a demonstration."
-        }
-    ];
-
-    const pricingPlans = [
-        {
-            name: "Tier-1",
-            description: "Pay as you go",
-            price: "₹495",
-            interval: "/per interview",
-            features: [
-                "No minimum volume commitment",
-                "Can carryover 25% of unused credits",
-                "Email support with-in 24hours"
-            ]
-        },
-        {
-            name: "Tier-2",
-            description: "Standard Starter Plan",
-            price: "₹396",
-            interval: "/per interview",
-            features: [
-                "Minimum of 100 interviews purchased per month",
-                "Can carryover 40% of unused credits to next month",
-                "Email support with-in 6 hours"
-            ]
-        },
-        {
-            name: "Tier-3",
-            description: "High volume plan",
-            price: "₹297",
-            interval: "/per interview",
-            features: [
-                "Minimum of 300 interviews purchased per month",
-                "Can carryover 50% of unused credits to next month",
-                "Email/call support with-in 2 hours"
-            ]
-        },
-        {
-            name: "Tire-4",
-            description: "Enterprise Plan",
-            price: "₹193",
-            interval: "/per interview",
-            features: [
-                "Minimum of 500 interviews purchased per month",
-                "Credits do not expire",
-                "Priority Email and Call support"
-            ]
-        }
-    ]
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white relative pb-10">
@@ -112,31 +36,21 @@ export default function LandingPage() {
 
                             {/* Navigation Links */}
                             <div className="hidden md:flex items-center gap-8">
-                                <Link to="#" className="text-gray-300 hover:text-white">
-                                    Explore Interviews
+                                {navigationLinks.map((item)=>
+                                <Link to={item.link} className="text-gray-300 hover:text-white">
+                                    {item.title}
                                 </Link>
-                                <Link to="#" className="text-gray-300 hover:text-white">
-                                    Mock Interviews
-                                </Link>
-                                <Link to="#" className="text-gray-300 hover:text-white">
-                                    For Job seekers
-                                </Link>
-                                <Link to="#" className="text-gray-300 hover:text-white">
-                                    Pricing
-                                </Link>
-                                <Link to="#" className="text-gray-300 hover:text-white">
-                                    FAQs
-                                </Link>
+                             )}
                             </div>
 
                             {/* Right Section */}
                             <div className="flex items-center gap-4">
-                                <Button variant="ghost" size="icon">
+                                {/* <Button variant="ghost" size="icon">
                                     <Search className="h-5 w-5" />
-                                </Button>
-                                <Button variant="ghost" size="icon">
+                                </Button> */}
+                                {/* <Button variant="ghost" size="icon">
                                     <MoonIcon className="h-5 w-5" />
-                                </Button>
+                                </Button> */}
                                 <Button
                                     variant="ghost"
                                     className="hidden md:inline-flex"
@@ -156,7 +70,7 @@ export default function LandingPage() {
                 </nav>
 
                 {/* Hero Section */}
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 text-center">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 text-center">
                     {/* New Badge */}
                     <div className="inline-flex items-center gap-2 bg-[#1C1C1C] rounded-full px-2 py-2 mb-8">
                         <span className="bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">
@@ -169,7 +83,7 @@ export default function LandingPage() {
 
                     {/* Hero Title */}
                     <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                        AI-based video interview and{' '}
+                        AI-based video interview <br /> and {' '}
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-purple-700">
                             hiring software
                         </span>
@@ -188,18 +102,20 @@ export default function LandingPage() {
                             className="hover:bg-gray-200 text-black text-lg px-8 py-6"
                             onClick={() => navigate('/signup')}
                         >
-                            Start free trial →
+                            Try Now →
                         </Button>
                         <Button
                             variant={'default'}
-                            className="text-lg px-8 py-6 text-black bg-purple-600 hover:bg-purple-700">
+                            className="text-lg px-8 py-6 text-black bg-purple-600 hover:bg-purple-700"
+                            onClick={() => navigate('/dashboard')}
+                            >
                             Book a demo
                         </Button>
                     </div>
                 </section>
 
                 {/* Pricing Section */}
-                <section id="pricing" className="max-w-md xl:max-w-7xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl mx-auto py-6 md:py-12 lg:py-18 ">
+                {/* <section id="pricing" className="max-w-md xl:max-w-7xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl mx-auto py-6 md:py-12 lg:py-18 ">
                     <div className=" px-4 sm:px-6 lg:px-8 ">
                         <div className="text-center mb-12">
                             <h2 className="text-4xl font-bold mb-4">Pricing</h2>
@@ -236,10 +152,10 @@ export default function LandingPage() {
                             ))}
                         </div>
                     </div>
-                </section>
+                </section> */}
 
                 {/* FAQs Section */}
-                <section id="faqs" className="py-24">
+                <section id="faqs" className="py-20">
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-12">
                             <span className="text-purple-500 text-sm font-medium">FAQS</span>
@@ -276,7 +192,7 @@ export default function LandingPage() {
                         <Button
                             size="lg"
                             className="bg-white text-black hover:bg-gray-200"
-                            onClick={() => navigate('/signup')}
+                            onClick={() => navigate('/dashboard')}
                         >
                             Get started - It's free →
                         </Button>
@@ -298,67 +214,25 @@ export default function LandingPage() {
                                 <p className="text-gray-400 text-sm">Hire Smarter, Not Harder!</p>
                             </div>
 
-                            {/* Explore Column */}
-                            <div>
-                                <h3 className="font-semibold mb-4">Explore</h3>
-                                <ul className="space-y-3">
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            For Job Seekers
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            For Recruiters
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Company Column */}
-                            <div>
-                                <h3 className="font-semibold mb-4">Company</h3>
-                                <ul className="space-y-3">
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            Contact Us
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            Careers
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            About Us
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Legal Column */}
-                            <div>
-                                <h3 className="font-semibold mb-4">Legal</h3>
-                                <ul className="space-y-3">
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            Privacy Policy
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="text-gray-400 hover:text-white text-sm">
-                                            Terms and Conditions
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
+                            {footerLinks.map((section,index)=>
+                             <div key={index}>
+                             <h3 className="font-semibold mb-4">{section.heading}</h3>
+                             <ul className="space-y-3">
+                                {section.items.map((item,index)=> 
+                                <li key={index}>
+                                     <Link to={item.link} className="text-gray-400 hover:text-white text-sm">
+                                        {item.title}
+                                     </Link>
+                                 </li>)}
+                             </ul>
+                         </div>
+                             )}
                         </div>
 
                         {/* Copyright */}
                         <div className="pt-8 border-t border-[#2D2D2D] text-center">
                             <p className="text-gray-400 text-sm">
-                                © helloGenAI.in. All rights reserved.
+                                © hellogenai.in. All rights reserved.
                             </p>
                         </div>
                     </div>
