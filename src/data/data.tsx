@@ -1,3 +1,10 @@
+export const navigationLinks = [
+    {title: 'Explore Interviews',link:'/dashboard'},
+    {title: 'Mock Interviews',link:'/dashboard'},
+    // {title: 'For Job seekers',link:'#'},
+    // {title: 'Pricing',link:'#'},
+    // {title: 'FAQs',link:'#'},
+];
 
 export const faqs = [
     {

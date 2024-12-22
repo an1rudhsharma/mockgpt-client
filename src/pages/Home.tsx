@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button"
-import { faqs, footerLinks } from "@/data/data";
+import { faqs, footerLinks, navigationLinks } from "@/data/data";
 import {  Users } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
 
@@ -36,21 +36,11 @@ export default function LandingPage() {
 
                             {/* Navigation Links */}
                             <div className="hidden md:flex items-center gap-8">
-                                <Link to="/dashboard" className="text-gray-300 hover:text-white">
-                                    Explore Interviews
+                                {navigationLinks.map((item)=>
+                                <Link to={item.link} className="text-gray-300 hover:text-white">
+                                    {item.title}
                                 </Link>
-                                <Link to="/dashboard" className="text-gray-300 hover:text-white">
-                                    Mock Interviews
-                                </Link>
-                                {/* <Link to="#" className="text-gray-300 hover:text-white">
-                                    For Job seekers
-                                </Link> */}
-                                {/* <Link to="#" className="text-gray-300 hover:text-white">
-                                    Pricing
-                                </Link> */}
-                                {/* <a href="#faqs" className="text-gray-300 hover:text-white">
-                                    FAQs
-                                </a> */}
+                             )}
                             </div>
 
                             {/* Right Section */}
