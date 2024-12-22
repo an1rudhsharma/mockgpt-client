@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer } from '
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Interview, Review } from "@/interfaces/types"
-import { LoadingSpinner } from "../loader"
 
 export default function ReviewPage() {
     const interviewId = useParams().interviewId as string;
