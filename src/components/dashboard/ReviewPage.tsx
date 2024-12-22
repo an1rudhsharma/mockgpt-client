@@ -1,49 +1,66 @@
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import useFetchReview from "@/hooks/useFetchReview"
-import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer, ShieldCheck, Download } from 'lucide-react'
+import { ChevronDown, ChevronUp, BriefcaseBusiness, CalendarDays, Timer } from 'lucide-react'
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Review } from "@/interfaces/types"
+import { Interview, Review } from "@/interfaces/types"
+import { LoadingSpinner } from "../loader"
 
 export default function ReviewPage() {
     const interviewId = useParams().interviewId as string;
+    const [interviewDetail, setInterviewDetail] = useState<Interview| null>(null);
     const [reviewDetails, setReviewDetails] = useState<Review | null>(null);
-    const [, setInterviewTranscript] = useState<string | null>(null);
+    const [interviewTranscript, setInterviewTranscript] = useState<{
+        speaker: string;
+        message: string;
+    }[] | null>(null);
     const { loading, getReview } = useFetchReview();
 
     const [isQuestionSummaryOpen, setIsQuestionSummaryOpen] = useState(false)
     const [isTranscriptOpen, setIsTranscriptOpen] = useState(false)
-    const [isVideoOpen, setIsVideoOpen] = useState(false)
+    // const [isVideoOpen, setIsVideoOpen] = useState(false)
+
+
+// Format interview transcript script into a presentable format
+const formatToArray = (input:string) => {
+    return input.split(/(?<=\.),/).map(entry => {
+      const [speaker, message] = entry.split(/:\s(.+)/);
+      return {
+        speaker: speaker.trim() == 'assistant' ? 'Alex' : 'User',
+        message: message.trim()
+      };
+    });
+  };
 
     useEffect(() => {
         getReview(interviewId).then((data) => {
+            setInterviewDetail(data)
             if (data?.callOutcome) {
                 let index1 = data.callOutcome.indexOf('{')
                 let index2 = data.callOutcome.lastIndexOf('}')
-
                 setReviewDetails(JSON.parse(data.callOutcome.slice(index1, index2 + 1)));
             }
-            setInterviewTranscript(data.conversationTranscript);
+            setInterviewTranscript(formatToArray(data.conversationTranscript))
         })
     }, [])
 
     if (loading) {
-        return <div>Loading....</div>
+        return <div className="flex items-center justify-center h-full text-6xl">Loading...</div>
     }
 
     if (reviewDetails == null) {
         return <div>No Details for this interview</div>
     }
 
+
     return (
         <div className="min-h-screen w-full text-white">
             <div className="flex items-center justify-end px-6 py-4">
-                <Button variant="outline" className="border-[#3D3D3D] text-black hover:bg-[#eee]">
+                {/* <Button variant="outline" className="border-[#3D3D3D] text-black hover:bg-[#eee]">
                     <Download className="w-4 h-4 mr-2" />
                     Download
-                </Button>
+                </Button> */}
             </div>
             <div className="container max-w-[70%] mx-auto py-8 px-4 ">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -52,12 +69,15 @@ export default function ReviewPage() {
                         <div className="flex flex-col lg:flex-row justify-between gap-6">
                             {/* Interview Report */}
                             <div className="space-y-4 flex-grow">
-                                <h1 className="text-2xl font-semibold">Interview Report for <span className="text-purple-600">Aaron Wang</span></h1>
+                                <h1 className="text-2xl font-semibold">Interview Report for <span className="text-purple-600">Abhay</span></h1>
                                 <div className="flex flex-col gap-4 text-sm text-gray-400">
-                                    <div className="flex items-center gap-2 font-medium"><BriefcaseBusiness size={18} /> Developer Intern</div >
-                                    <div className="flex items-center gap-2 font-medium"><CalendarDays size={18} /> Mar 5, 2024</div>
-                                    <div className="flex items-center gap-2 font-medium"><Timer size={18} /> 9 minutes and 25 seconds</div>
-                                    <div className="flex items-center gap-2 font-medium"><ShieldCheck size={18} /> No signs of unfairness detected</div>
+                                    <div className="flex items-center gap-2 font-medium"><BriefcaseBusiness size={18} /> {interviewDetail?.interviewType} Interview</div >
+                                    <div className="flex items-center gap-2 font-medium"><CalendarDays size={18} /> {interviewDetail?.date}</div>
+                                    <div className="flex items-center gap-2 font-medium"><Timer size={18} />   
+                                    {Boolean(interviewDetail?.duration.hours) && `${interviewDetail?.duration.hours} hrs `}
+                                    {Boolean(interviewDetail?.duration.minutes) && `${interviewDetail?.duration.minutes} mins `}
+                                    {Boolean(interviewDetail?.duration.seconds) && `${interviewDetail?.duration.seconds} secs`}</div>
+                                    {/* <div className="flex items-center gap-2 font-medium"><ShieldCheck size={18} /> No signs of unfairness detected</div> */}
                                 </div>
                             </div>
 
@@ -157,21 +177,19 @@ export default function ReviewPage() {
                                 <div className="p-4 pt-0 space-y-4">
                                     {/* Transcript content */}
                                     <div className="space-y-4 text-sm">
+                                       {interviewTranscript?.map((message)=>
                                         <div>
-                                            <div className="text-gray-400">[00:00] Interviewer</div>
-                                            <p>Hey Aaron, thanks for joining me today! I'm Alex and I'll be conducting your interview. I'm excited to get started. Can you tell me a little bit about yourself?</p>
+                                            {/* <div className="text-gray-400">[00:00]{message.speaker}</div> */}
+                                            <div className="text-gray-400">{message.speaker}</div>
+                                            <p>{message.message}</p>
                                         </div>
-                                        <div>
-                                            <div className="text-gray-400">[00:10] Candidate</div>
-                                            <p>Hey, Alex. Nice to meet you. My name is Aaron. I studied computer science at Brown University. I'm really passionate about software engineering, and all things data science related. So really excited to to, again, get started here.</p>
-                                        </div>
-                                    </div>
+                                       )}</div>
                                 </div>
                             )}
                         </Card>
 
                         {/* Video Recording */}
-                        <Card className="bg-[#2C2C2C] border-[#3D3D3D] text-white">
+                        {/* <Card className="bg-[#2C2C2C] border-[#3D3D3D] text-white">
                             <div
                                 className="p-4 flex justify-between items-center cursor-pointer"
                                 onClick={() => setIsVideoOpen(!isVideoOpen)}
@@ -193,7 +211,7 @@ export default function ReviewPage() {
                                     </div>
                                 </div>
                             )}
-                        </Card>
+                        </Card> */}
                     </div>
                 </div>
             </div>

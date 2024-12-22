@@ -3,15 +3,7 @@ import { ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import useFetchReview from "@/hooks/useFetchReview"
 import { useAuthContext } from "@/context/AuthContext"
-
-interface Interview {
-    interviewId: string
-    userId: string
-    interviewType: string
-    date: string
-    duration: {hours:number,minutes:number,seconds:number}
-    time: number
-}
+import { Interview } from "@/interfaces/types"
 
 const DashboardHistory = () => {
     const navigate = useNavigate();
