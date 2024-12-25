@@ -1,40 +1,47 @@
 export const navigationLinks = [
-    {title: 'Explore Interviews',link:'/dashboard'},
-    {title: 'Mock Interviews',link:'/dashboard'},
-    // {title: 'For Job seekers',link:'#'},
-    // {title: 'Pricing',link:'#'},
-    // {title: 'FAQs',link:'#'},
+  { title: "Explore Interviews", link: "/dashboard" },
+  { title: "Mock Interviews", link: "/dashboard" },
+  // {title: 'For Job seekers',link:'#'},
+  // {title: 'Pricing',link:'#'},
+  // {title: 'FAQs',link:'#'},
 ];
 
 export const faqs = [
-    {
-        question: "What is hellogenai?",
-        answer: "hellogenai is an AI-powered platform that helps companies conduct and evaluate technical interviews efficiently and objectively."
-    },
-    {
-        question: "How does hellogenai conduct interviews?",
-        answer: "Our platform uses advanced AI to conduct real-time video interviews, assess technical skills, and provide detailed feedback and scoring."
-    },
-    {
-        question: "How is candidate performance evaluated?",
-        answer: "We use a combination of AI analysis, technical assessment, and behavioral evaluation to provide comprehensive candidate scoring."
-    },
-    {
-        question: "Can hellogenai handle technical interviews?",
-        answer: "Yes, our platform is specifically designed to conduct technical interviews across various domains including software development, data science, and more."
-    },
-    {
-        question: "What kind of support can I expect?",
-        answer: "We offer email and phone support, with response times varying by plan tier. Enterprise customers receive priority support."
-    },
-    {
-        question: "How do I get started with hellogenai?",
-        answer: "Simply sign up for a free account, choose your plan, and start conducting interviews immediately."
-    },
-    {
-        question: "Can I get a demo of hellogenai?",
-        answer: "Yes, we offer free demos for enterprise customers. Contact our sales team to schedule a demonstration."
-    }
+  {
+    question: "What is MockGPT?",
+    answer:
+      "MockGPT is an AI-powered platform that helps companies conduct and evaluate technical interviews efficiently and objectively.",
+  },
+  {
+    question: "How does MockGPT conduct interviews?",
+    answer:
+      "Our platform uses advanced AI to conduct real-time video interviews, assess technical skills, and provide detailed feedback and scoring.",
+  },
+  {
+    question: "How is candidate performance evaluated?",
+    answer:
+      "We use a combination of AI analysis, technical assessment, and behavioral evaluation to provide comprehensive candidate scoring.",
+  },
+  {
+    question: "Can MockGPT handle technical interviews?",
+    answer:
+      "Yes, our platform is specifically designed to conduct technical interviews across various domains including software development, data science, and more.",
+  },
+  {
+    question: "What kind of support can I expect?",
+    answer:
+      "We offer email and phone support, with response times varying by plan tier. Enterprise customers receive priority support.",
+  },
+  {
+    question: "How do I get started with MockGPT?",
+    answer:
+      "Simply sign up for a free account, choose your plan, and start conducting interviews immediately.",
+  },
+  {
+    question: "Can I get a demo of MockGPT?",
+    answer:
+      "Yes, we offer free demos for enterprise customers. Contact our sales team to schedule a demonstration.",
+  },
 ];
 
 // export const pricingPlans = [
@@ -85,48 +92,47 @@ export const faqs = [
 // ]
 
 export const footerLinks = [
-    { 
-        heading: 'Explore', 
-        items : [
-            {
-                title:'For Job Seekers',
-                link:'/dashboard'
-            },
-            // {
-            //     title:'For Recruiters',
-            //     link:'/signup'
-            // },
-        ]
-    },
-    { 
-        heading: 'Company', 
-        items : [
-            {
-                title:'Contact Us',
-                link:'/contact-us'
-            },
-            //  {
-            //    title:'Careers',
-            //     link:'/careers'
-            // },
-            {
-                title:'About Us',
-                link:'/about-us'
-            },
-        ]
-    },
-    { 
-        heading: 'Legal', 
-        items : [
-            {
-                title:'Privacy Policy',
-                link:'/privacy-policy'
-            },
-            {
-                title:'Terms and Conditions',
-                link:'/terms-and-conditions'
-            },
-        ]
-    }
-
-]
+  {
+    heading: "Explore",
+    items: [
+      {
+        title: "For Job Seekers",
+        link: "/dashboard",
+      },
+      // {
+      //     title:'For Recruiters',
+      //     link:'/signup'
+      // },
+    ],
+  },
+  {
+    heading: "Company",
+    items: [
+      {
+        title: "Contact Us",
+        link: "/contact-us",
+      },
+      //  {
+      //    title:'Careers',
+      //     link:'/careers'
+      // },
+      {
+        title: "About Us",
+        link: "/about-us",
+      },
+    ],
+  },
+  {
+    heading: "Legal",
+    items: [
+      {
+        title: "Privacy Policy",
+        link: "/privacy-policy",
+      },
+      {
+        title: "Terms and Conditions",
+        link: "/terms-and-conditions",
+      },
+    ],
+  },
+];
