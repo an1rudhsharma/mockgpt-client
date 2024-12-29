@@ -105,19 +105,19 @@ export default function LandingPage() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
+            {/* <Button
               variant="outline"
               className="hover:bg-gray-200 text-black text-lg px-8 py-6"
               onClick={() => navigate("/signup")}
             >
               Try Now →
-            </Button>
+            </Button> */}
             <Button
               variant={"default"}
               className="text-lg px-8 py-6 text-black bg-purple-600 hover:bg-purple-700"
               onClick={() => navigate("/dashboard")}
             >
-              Book a demo
+              Try Now →
             </Button>
           </div>
         </section>
