@@ -364,7 +364,7 @@ export const VideoScreenButtons: React.FC<VideoButtonsProps> = ({
             <PhoneOff />
           </Button>
 
-          <TextEditorModal />
+          <TextEditorModal socketRef={socketRef} />
         </>
       )}
     </>
