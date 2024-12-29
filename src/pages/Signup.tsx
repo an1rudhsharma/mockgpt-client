@@ -105,6 +105,9 @@ function SignupForm({
     if (password !== confirmPassword) {
       return "Passwords do not match.";
     }
+    if (mobile.length !== 10) {
+      return "Invalid Mobile Number.";
+    }
     return null;
   };
 
@@ -120,7 +123,7 @@ function SignupForm({
       name: `${firstName} ${lastName}`,
       email: email!,
       password: password!,
-      mobile: mobile!,
+      mobile: `${countryCode}${mobile!}`,
     });
 
     if (success) {
