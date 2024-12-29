@@ -106,7 +106,7 @@ export const JoinCall: React.FC<{
         <AvatarImage src="https://github.com/shadcn.png" />
         <AvatarFallback>R</AvatarFallback>
       </Avatar>
-      <p className="text-gray-400 mb-4">Rishabh is in the call</p>
+      <p className="text-gray-400 mb-4">Alex is in the call</p>
       {loading ? (
         <Button className="bg-purple-600 hover:bg-purple-700">
           Loading...
@@ -289,7 +289,7 @@ const SecondJoineeScreen: React.FC<{
       >
         <Avatar className={`${isUserFullScreen ? "w-12 h-12" : "w-10 h-10"}`}>
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>R</AvatarFallback>
+          <AvatarFallback>A</AvatarFallback>
         </Avatar>
         <p>Alex</p>
       </div>
