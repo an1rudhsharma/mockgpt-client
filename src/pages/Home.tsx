@@ -114,7 +114,7 @@ export default function LandingPage() {
             </Button> */}
             <Button
               variant={"default"}
-              className="text-lg px-8 py-6 text-black bg-purple-600 hover:bg-purple-700"
+              className="text-lg px-8 py-6 text-white bg-purple-600 hover:bg-purple-700"
               onClick={() => navigate("/dashboard")}
             >
               Try Now →
