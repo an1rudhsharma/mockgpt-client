@@ -5,27 +5,33 @@ export const useMicrophone = (
 ) => {
   const audioStream = useRef<MediaStream | null>(null);
   const microphone = useRef<MediaRecorder | null>(null);
+  const microphoneStateRef = useRef<boolean>(false);
+
   const [isMicropohoneOn, setIsMicrophoneOn] = useState<boolean>(false);
 
   const changeMicrophoneState = async () => {
     try {
-      if (!microphone.current) {
-        let stream = audioStream.current;
-
-        if (!stream) {
-          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioStream.current = stream;
-        }
-
-        const myMicrophone = new MediaRecorder(stream, {
-          mimeType: "audio/webm",
-        });
-        microphone.current = myMicrophone;
-
-        await openMicrophone(microphone, socketRef);
+      if (!isMicropohoneOn) {
+        microphoneStateRef.current = true;
         setIsMicrophoneOn(true);
+        if (!microphone.current && socketRef.current) {
+          let stream = audioStream.current;
+
+          if (!stream) {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioStream.current = stream;
+          }
+
+          const myMicrophone = new MediaRecorder(stream, {
+            mimeType: "audio/webm",
+          });
+          microphone.current = myMicrophone;
+
+          await openMicrophone(microphone, socketRef);
+        }
       } else {
-        closeMicrophone(microphone, audioStream);
+        // closeMicrophone(microphone, audioStream);
+        microphoneStateRef.current = false;
         setIsMicrophoneOn(false);
       }
     } catch (error) {
@@ -33,71 +39,71 @@ export const useMicrophone = (
     }
   };
 
+  const openMicrophone = (
+    microphone: React.MutableRefObject<MediaRecorder | null>,
+    socketRef: React.MutableRefObject<WebSocket | null>
+  ) => {
+    return new Promise((resolve, reject) => {
+      if (microphone.current) {
+        microphone.current.onstart = () => {
+          console.log("client: microphone opened");
+          resolve(0);
+        };
+
+        microphone.current.onstop = () => {
+          if (microphone.current) {
+            microphone.current.onstart = null;
+            microphone.current.onstop = null;
+            microphone.current.ondataavailable = null;
+            microphone.current = null;
+            console.log("client: microphone closed");
+          }
+        };
+
+        microphone.current.ondataavailable = async (event: BlobEvent) => {
+          if (
+            microphoneStateRef.current &&
+            event.data.size > 0 &&
+            socketRef.current &&
+            socketRef.current.readyState === WebSocket.OPEN
+          ) {
+            // Convert the Blob to an ArrayBuffer
+            const arrayBuffer = await event.data.arrayBuffer();
+
+            // Convert the ArrayBuffer to a Buffer
+            const base64Chunk = arrayBufferToBase64(arrayBuffer);
+
+            socketRef.current.send(
+              JSON.stringify({ type: "media", data: base64Chunk })
+            );
+          }
+        };
+
+        try {
+          microphone.current.start(1000);
+        } catch (error) {
+          reject(error);
+        }
+      }
+    });
+  };
+
   return { microphone, changeMicrophoneState, isMicropohoneOn };
 };
 
-const openMicrophone = (
-  microphone: React.MutableRefObject<MediaRecorder | null>,
-  socketRef: React.MutableRefObject<WebSocket | null>
-) => {
-  return new Promise((resolve, reject) => {
-    if (microphone.current) {
-      microphone.current.onstart = () => {
-        console.log("client: microphone opened");
-        resolve(0);
-      };
+// const closeMicrophone = (
+//   microphone: React.MutableRefObject<MediaRecorder | null>,
+//   audioStream: React.MutableRefObject<MediaStream | null>
+// ) => {
+//   if (microphone.current) {
+//     microphone.current.stop();
+//   }
 
-      microphone.current.onstop = () => {
-        if (microphone.current) {
-          microphone.current.onstart = null;
-          microphone.current.onstop = null;
-          microphone.current.ondataavailable = null;
-          microphone.current = null;
-          console.log("client: microphone closed");
-        }
-      };
-
-      microphone.current.ondataavailable = async (event: BlobEvent) => {
-        if (
-          event.data.size > 0 &&
-          socketRef.current &&
-          socketRef.current.readyState === WebSocket.OPEN
-        ) {
-          //   socketRef.current.send(event.data);
-          // Convert the Blob to an ArrayBuffer
-          const arrayBuffer = await event.data.arrayBuffer();
-
-          // Convert the ArrayBuffer to a Buffer
-          const base64Chunk = arrayBufferToBase64(arrayBuffer);
-
-          socketRef.current.send(
-            JSON.stringify({ type: "media", data: base64Chunk })
-          );
-        }
-      };
-
-      try {
-        microphone.current.start(1000);
-      } catch (error) {
-        reject(error);
-      }
-    }
-  });
-};
-
-const closeMicrophone = (
-  microphone: React.MutableRefObject<MediaRecorder | null>,
-  audioStream: React.MutableRefObject<MediaStream | null>
-) => {
-  if (microphone.current) {
-    microphone.current.stop();
-  }
-
-  if (audioStream.current) {
-    audioStream.current.getTracks().forEach((track) => track.stop());
-    audioStream.current = null;
-  }
-};
+//   if (audioStream.current) {
+//     audioStream.current.getTracks().forEach((track) => track.stop());
+//     audioStream.current = null;
+//   }
+// };
 
 const handleMicrophoneError = (error: unknown) => {
   if (error instanceof DOMException) {
