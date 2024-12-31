@@ -71,11 +71,14 @@ export default function InterviewPage() {
 
               <div className="w-full max-w-xs flex flex-col items-center justify-center ">
                 <JoinCall
-                  onClick={() =>
+                  onClick={() => {
+                    if (isMicropohoneOn) {
+                      changeMicrophoneState();
+                    }
                     makeSocketConnection(
                       type?.split("-")[0] as InterviewSubject
-                    )
-                  }
+                    );
+                  }}
                   loading={loading}
                 />
               </div>
