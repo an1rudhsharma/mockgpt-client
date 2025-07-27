@@ -1,50 +1,91 @@
-# React + TypeScript + Vite
+# MockGPT – AI-Powered Mock Interview Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MockGPT is a MERN stack-based AI mock interview platform designed to simulate realistic interview environments. It leverages OpenAI, Deepgram, and AWS Polly to provide interactive conversations with speech-to-text (STT) and text-to-speech (TTS) capabilities.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🧠 AI-Powered Interview Simulation (OpenAI GPT-based)
+- 🎤 Real-time Speech-to-Text using Deepgram
+- 🔊 Text-to-Speech using AWS Polly
+- 🔁 Live conversation loop using WebSockets (Socket.IO)
+- 📋 Transcript and outcome generation
+- 🔐 User Authentication with JWT
+- 📊 Interview stats & dashboard (upcoming)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🛠 Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend:** React, Tailwind CSS, Socket.IO Client  
+- **Backend:** Node.js, Express.js, Socket.IO Server, TypeScript  
+- **Database:** MongoDB  
+- **STT:** Deepgram  
+- **TTS:** AWS Polly  
+- **AI Engine:** OpenAI API  
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 📸 Screenshots
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 🏠 Homepage Screens
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+#### Homepage – View 1
+![Homepage View 1](public/HomePage-1.png)
+
+#### Homepage – View 2
+![Homepage View 2](public/HomePage-2.png)
+
+#### Homepage – View 3
+![Homepage View 3](public/HomePage-3.png)
+
+---
+
+### 🔐 Authentication
+
+#### Sign In Page
+![Sign In Page](public/Signin.png)
+
+#### Signup Page
+![Signup Page](public/Signup.png)
+
+---
+
+### 📊 Dashboard
+
+#### Main Dashboard
+#### Role & Mode Selection
+![Dashboard](public/Dashboard.png)
+
+---
+
+### 🎯 Pre-Interview Screen
+
+#### Camera & microphone permissions
+![Pre-Interview Screen](public/PreInterviewscreen.png)
+
+---
+
+### 🧑‍💼 Interview Interface
+
+#### Interview in Progress – View 1
+![Interview Screen](public/InterviewScreen.png)
+
+#### Interview in Progress – View 2
+![Interview Screen 2](public/InterviewScreen-2.png)
+
+---
+
+### 💻 Code Editor
+
+#### Coding Editor
+![Code Editor](public/CodeEditor.png)
+
+---
+
+### 📈 Feedback & Stats
+
+#### Feedback – View 1
+![Feedback 1](public/Feedback-1.png)
+
+#### Feedback – View 2
+![Feedback 2](public/Feedback-2.png)
